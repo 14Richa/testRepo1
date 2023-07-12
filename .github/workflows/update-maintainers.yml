@@ -142,17 +142,17 @@ jobs:
       - name: Checkout main branch
         uses: actions/checkout@v2
         with:
-          ref: master
-          path: current_state
+          ref: main
+          path: testRepo-main
 
       - name: Checkout one commit before last one
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 2
-          ref: master
-          path: previous_state
+          ref: main
+          path: testRepo
 
-      - run: cd previous_state && git checkout HEAD^
+      - run: cd testRepo && git checkout HEAD^
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -182,8 +182,8 @@ jobs:
               return matches.map(match => match.substr(1));
             }
       
-            const mainCodeowners = fs.readFileSync('./current_state/CODEOWNERS', 'utf8');
-            const prCodeowners = fs.readFileSync('./previous_state/CODEOWNERS', 'utf8');
+            const mainCodeowners = fs.readFileSync('./testRepo-main/CODEOWNERS', 'utf8');
+            const prCodeowners = fs.readFileSync('./testRepo/CODEOWNERS', 'utf8');
       
             const mainUsernames = extractGitHubUsernames(mainCodeowners);
             const prUsernames = extractGitHubUsernames(prCodeowners);
@@ -194,7 +194,7 @@ jobs:
             console.log('Removed Usernames:', removedUsernames);
 
             // Update MAINTAINERS.yaml
-            const maintainersFile = './current_state/MAINTAINERS.yaml';
+            const maintainersFile = './testRepo-main/MAINTAINERS.yaml';
             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
 
             // Update for added usernames
