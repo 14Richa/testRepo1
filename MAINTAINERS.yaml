@@ -1,4 +1,13 @@
 - name: Aishat
+  github: 1bulbul
+  linkedin: aishatmuibudeen
+  slack: U03CNHGEUR1
+  twitter: maya_ux_ui
+  availableForHire: true
+  isTscMember: true
+  repos:
+    - website
+- name: Aishat
   github: 14Richa
   linkedin: aishatmuibudeen
   slack: U03CNHGEUR1
