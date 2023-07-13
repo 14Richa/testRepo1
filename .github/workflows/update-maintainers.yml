@@ -162,8 +162,8 @@ jobs:
       - name: Install js-yaml
         run: npm install js-yaml@3.14.1
 
-      - name: Run script
-        run: node script.js
+      - name: Print env variable
+        run: echo "Bot token is ${{ secrets.BOT_TOKEN }}"
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
 
@@ -178,6 +178,7 @@ jobs:
 
             const fetch = require('node-fetch');
 
+            const fetch = require('node-fetch');
             async function getTwitterUsernameFromGithub(username) {
               const token = process.env.BOT_TOKEN;  // Use the token from environment variables
 
@@ -240,7 +241,9 @@ jobs:
               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
                 console.log('Skipping bot account:', username);
                 return; // Skip the iteration for bot accounts
-              }
+              }                  
+                  
+              const twitterUsername = await getTwitterUsernameFromGithub(username);
               const existingMaintainer = maintainers.find(maintainer => maintainer.github === username);
               if (!existingMaintainer) {
                 maintainers.push({
