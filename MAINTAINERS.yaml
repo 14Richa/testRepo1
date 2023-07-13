@@ -52,3 +52,13 @@
   isTscMember: true
   repos:
     - website
+- name: Richa Sharma
+  github: 14Richa
+  linkedin: v-thulisile-sibanda
+  twitter: thulieblack
+  slack: U03CNJPMT7C
+  availableForHire: false
+  company: AsyncAPI Initiative
+  isTscMember: true
+  repos:
+    - website
