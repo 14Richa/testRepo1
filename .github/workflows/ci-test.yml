@@ -27,7 +27,7 @@ jobs:
       - run: cd testRepo && git checkout HEAD^
 
       - name: Install dependencies
-        run: npm install js-yaml
+        run: npm install js-yaml@4.1.0
 
       - name: Compare files
         id: compare-files
@@ -52,6 +52,11 @@ jobs:
             }
 
             core.info('Maintainers in main branch:\n' + yaml.dump(main_file));
+            core.info('Location of Maintainers in main branch:');
+            core.info(fs.realpathSync('./testRepo-main/MAINTAINERS.yaml'));
+            core.info('Maintainers in PR branch:\n' + yaml.dump(pr_file));
+            core.info('Location of Maintainers in PR branch:');
+            core.info(fs.realpathSync('./testRepo/MAINTAINERS.yaml'));
 
       - name: Debug newMaintainers output
         run: |
