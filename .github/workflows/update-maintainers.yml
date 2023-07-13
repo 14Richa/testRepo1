@@ -167,6 +167,8 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
 
+      - name: Install node-fetch
+        run: npm install node-fetch
 
       - name: Compare CODEOWNERS
         id: compare-codeowners
@@ -176,7 +178,6 @@ jobs:
             const fs = require('fs');
             const yaml = require('js-yaml');
 
-            const fetch = require('node-fetch');
             async function getTwitterUsernameFromGithub(username) {
               const token = process.env.BOT_TOKEN;  // Use the token from environment variables
 
@@ -234,13 +235,13 @@ jobs:
             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
 
             // Update for added usernames
-            addedUsernames.forEach(username => {
+            for (const username of addedUsernames) {
               // Exclude bot accounts
               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
                 console.log('Skipping bot account:', username);
                 return; // Skip the iteration for bot accounts
               }                  
-                  
+
               const twitterUsername = await getTwitterUsernameFromGithub(username);
               const existingMaintainer = maintainers.find(maintainer => maintainer.github === username);
               if (!existingMaintainer) {
@@ -254,7 +255,7 @@ jobs:
               } else {
                 console.log('Maintainer', username, 'already exists. Skipping addition.');
               }
-            });
+            }
 
             // Update for removed usernames
             removedUsernames.forEach(username => {
