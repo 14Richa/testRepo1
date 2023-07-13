@@ -177,8 +177,6 @@ jobs:
             const yaml = require('js-yaml');
 
             const fetch = require('node-fetch');
-
-            const fetch = require('node-fetch');
             async function getTwitterUsernameFromGithub(username) {
               const token = process.env.BOT_TOKEN;  // Use the token from environment variables
 
