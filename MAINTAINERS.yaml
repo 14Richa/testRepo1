@@ -80,3 +80,13 @@
   isTscMember: true
   repos:
     - website
+- name: Richa
+  github: 14Richa996
+  linkedin: v-thulisile-sibanda
+  twitter: thulieblack
+  slack: U03CNJPMT7C
+  availableForHire: false
+  company: AsyncAPI Initiative
+  isTscMember: true
+  repos:
+    - website
