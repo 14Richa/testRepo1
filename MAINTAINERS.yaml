@@ -71,3 +71,13 @@
   isTscMember: true
   repos:
     - website
+- name: Annu
+  github: all-seeing-code 
+  linkedin: v-thulis
+  twitter: thulieblack
+  slack: U03CNJPMT7C
+  availableForHire: false
+  company: AsyncAPI Initiative
+  isTscMember: true
+  repos:
+    - website
