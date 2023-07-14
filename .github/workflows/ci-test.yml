@@ -150,17 +150,17 @@ jobs:
           echo "newMaintainers = ${{ steps.compare-files.outputs.newMaintainers }}"
 
   add_maintainer:
-  needs: welcome
-  if: needs.welcome.outputs.newMaintainers != ''
-  runs-on: ubuntu-latest
-  steps:
-    - name: Invite new maintainers to the organization and team
-      run: |
-        IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
-        for MAINTAINER in "${MAINTAINERS[@]}"; do
-          gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token ${{ secrets.GH_TOKEN }}" -X PUT
-        done 
-
+    needs: welcome
+    if: needs.welcome.outputs.newMaintainers != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invite new maintainers to the organization and team
+        run: |
+          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
+          for MAINTAINER in "${MAINTAINERS[@]}"; do
+            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token ${{ secrets.GH_TOKEN }}" -X PUT
+          done 
+  
 
 
   display_message:
