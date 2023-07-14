@@ -157,7 +157,16 @@ jobs:
     if: needs.welcome.outputs.newMaintainers != ''
     runs-on: ubuntu-latest
     steps:
-      - name: Invite new maintainers to the organization and team
+      - name: Invite new maintainers to the organization
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
+          for MAINTAINER in "${MAINTAINERS[@]}"; do
+            gh api -X PUT /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
+          done
+
+      - name: Add new maintainers to the team
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
