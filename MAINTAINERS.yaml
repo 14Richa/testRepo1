@@ -61,3 +61,13 @@
   isTscMember: true
   repos:
     - website
+- name: Thugh
+  github: 14Richa99
+  linkedin: v-thulis
+  twitter: thulieblack
+  slack: U03CNJPMT7C
+  availableForHire: false
+  company: AsyncAPI Initiative
+  isTscMember: true
+  repos:
+    - website
