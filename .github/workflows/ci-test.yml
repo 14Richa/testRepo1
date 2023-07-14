@@ -158,11 +158,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Invite new maintainers to the organization and team
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
           for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token ${{ secrets.GH_TOKEN }}" -X PUT
-          done 
+            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X PUT
+          done
 
 
 
