@@ -79,12 +79,11 @@ jobs:
             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
 
             const { Octokit } = require("@octokit/rest");
-            const fetch = require("node-fetch");
 
             const octokit = new Octokit({
               auth: process.env.BOT_TOKEN,
               request: {
-                fetch: fetch
+                fetch: require('node-fetch')
               }
             });
 
