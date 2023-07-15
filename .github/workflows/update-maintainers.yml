@@ -1,130 +1,3 @@
-# name: Update MAINTAINERS.yaml
-
-# on:
-#   pull_request:
-#     types: [closed]
-#     paths:
-#       - 'CODEOWNERS'
-
-# jobs:
-#   update-maintainers:
-#     if: github.event.pull_request.merged
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout main branch
-#         uses: actions/checkout@v2
-#         with:
-#           ref: main
-#           path: testRepo-main
-
-#       - name: Checkout one commit before last one
-#         uses: actions/checkout@v2
-#         with:
-#           fetch-depth: 2
-#           ref: main
-#           path: testRepo
-
-#       - run: cd testRepo && git checkout HEAD^
-
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: '14'
-
-#       - name: Install js-yaml
-#         run: npm install js-yaml@3.14.1
-
-#       - name: Get repository name
-#         run: |
-#           REPO_NAME=$(basename ${{ github.repository }})
-#           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
-#           echo "Repository Name: $REPO_NAME"     
-      
-#       - name: Compare CODEOWNERS
-#         id: compare-codeowners
-#         uses: actions/github-script@v6
-#         with:
-#           script: |
-#             const fs = require('fs');
-#             const yaml = require('js-yaml');
-
-#             // Get repository name
-#             const repoName = process.env.REPO_NAME;
-
-#             function extractGitHubUsernames(content) {
-#               const regex = /@([a-zA-Z0-9_-]+)/g;
-#               const matches = content.match(regex);
-#               if (!matches) {
-#                 return [];
-#               }
-#               return matches.map(match => match.substr(1));
-#             }
-#             const mainCodeowners = fs.readFileSync('./testRepo-main/CODEOWNERS', 'utf8');
-#             const prCodeowners = fs.readFileSync('./testRepo/CODEOWNERS', 'utf8');
-#             const mainUsernames = extractGitHubUsernames(mainCodeowners);
-#             const prUsernames = extractGitHubUsernames(prCodeowners);
-#             const addedUsernames = mainUsernames.filter(username => !prUsernames.includes(username));
-#             const removedUsernames = prUsernames.filter(username => !mainUsernames.includes(username));
-
-#             console.log('Added Usernames:', addedUsernames);
-#             console.log('Removed Usernames:', removedUsernames);
-#             console.log(`ADDED_USERNAMES=${addedUsernames.join(', ')}`);
-#             console.log(`REMOVED_USERNAMES=${removedUsernames.join(', ')}`);
-
-#             // Update MAINTAINERS.yaml
-#             const maintainersFile = './testRepo-main/MAINTAINERS.yaml';
-#             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
-
-#             // Update for added usernames
-#             addedUsernames.forEach(username => {
-#               // Exclude bot accounts
-#               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
-#                 console.log('Skipping bot account:', username);
-#                 return; // Skip the iteration for bot accounts
-#               }
-#               const existingMaintainer = maintainers.find(maintainer => maintainer.github === username);
-#               if (!existingMaintainer) {
-#                 maintainers.push({
-#                   github: username,
-#                   isTscMember: false,
-#                   repos: [repoName]
-#                 });
-#                 console.log('Added maintainer:', username);
-#               } else {
-#                 console.log('Maintainer', username, 'already exists. Skipping addition.');
-#               }
-#             });
-
-#             // Update for removed usernames
-#             removedUsernames.forEach(username => {
-#               const index = maintainers.findIndex(maintainer => maintainer.github === username);
-#               if (index !== -1) {
-#                 const maintainer = maintainers[index];
-#                 const repoIndex = maintainer.repos.indexOf(repoName);
-            
-#                 if (repoIndex !== -1) {
-#                   maintainer.repos.splice(repoIndex, 1);
-#                   console.log(`Removed repository ${repoName} from maintainer ${username}`);
-            
-#                   if (maintainer.repos.length === 0) {
-#                     maintainers.splice(index, 1);
-#                     console.log(`Removed maintainer ${username} as they have no other repositories`);
-#                   }
-#                 } else {
-#                   console.log(`Repository ${repoName} not found for maintainer ${username}`);
-#                 }
-#               } else {
-#                 console.log(`Maintainer ${username} does not exist. Skipping removal.`);
-#               }
-#             });
-
-#             // Write updated MAINTAINERS.yaml file
-#             const updatedMaintainers = yaml.safeDump(maintainers);
-#             fs.writeFileSync(maintainersFile, updatedMaintainers);
-#             console.log('Updated MAINTAINERS.yaml:', updatedMaintainers);
-
-
 name: Update MAINTAINERS.yaml
 
 on:
@@ -162,14 +35,6 @@ jobs:
       - name: Install js-yaml
         run: npm install js-yaml@3.14.1
 
-      - name: Print env variable
-        run: echo "Bot token is ${{ secrets.BOT_TOKEN }}"
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-
-      - name: Install node-fetch
-        run: npm install node-fetch
-
       - name: Compare CODEOWNERS
         id: compare-codeowners
         uses: actions/github-script@v6
@@ -177,33 +42,6 @@ jobs:
           script: |
             const fs = require('fs');
             const yaml = require('js-yaml');
-            async function getTwitterUsernameFromGithub(username) {
-              const token = process.env.BOT_TOKEN;  // Use the token from environment variables
-            
-              const response = await fetch(`https://api.github.com/users/${username}`, {
-                method: 'GET',
-                headers: {
-                  'Accept': 'application/vnd.github.v3+json',
-                  'Authorization': `Bearer ${token}`,
-                },
-              });
-            
-              const result = await response.json();
-            
-              if (response.status !== 200) {
-                console.error(result);
-                throw new Error('Failed to fetch user data from GitHub');
-              }
-            
-              if (result.twitter_username === null) {
-                throw new Error(`Twitter username is null for GitHub user ${username}`);
-              }
-            
-              return result.twitter_username;
-            }
-
-
-
 
             // Get repository name
             const repoName = context.repo.repo;
@@ -233,27 +71,24 @@ jobs:
             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
 
             // Update for added usernames
-            for (const username of addedUsernames) {
+            addedUsernames.forEach(username => {
               // Exclude bot accounts
               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
                 console.log('Skipping bot account:', username);
                 return; // Skip the iteration for bot accounts
-              }                  
-
-              const twitterUsername = await getTwitterUsernameFromGithub(username);
+              }
               const existingMaintainer = maintainers.find(maintainer => maintainer.github === username);
               if (!existingMaintainer) {
                 maintainers.push({
                   github: username,
                   isTscMember: false,
-                  twitter: twitterUsername,
                   repos: [repoName]
                 });
                 console.log('Added maintainer:', username);
               } else {
                 console.log('Maintainer', username, 'already exists. Skipping addition.');
               }
-            }
+            });
 
             // Update for removed usernames
             removedUsernames.forEach(username => {
