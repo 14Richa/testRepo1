@@ -34,32 +34,17 @@ jobs:
 
       - name: Install js-yaml
         run: npm install js-yaml@3.14.1
-      
-      - name: Install @octokit/rest
-        run: npm install @octokit/rest
-
-      - name: Install node-fetch
-        run: npm install node-fetch
-
 
       - name: Compare CODEOWNERS
         id: compare-codeowners
+        uses: actions/github-script@v5
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
             const yaml = require('js-yaml');
-            const fetch = require('node-fetch');
-
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit({
-              auth: process.env.BOT_TOKEN,
-              request: {
-                fetch: fetch
-              }
-            });
 
             // Get repository name
             const repoName = context.repo.repo;
@@ -90,8 +75,8 @@ jobs:
 
             // Update for added usernames
             for (const username of addedUsernames) {
-              const { data } = await octokit.users.getByUsername({ username });
-              const twitterUsername = data.twitter_username;
+              const user = await github.users.getByUsername({ username });
+              const twitterUsername = user.data.twitter_username;
 
               // Exclude bot accounts
               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
