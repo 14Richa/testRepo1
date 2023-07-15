@@ -150,7 +150,6 @@ jobs:
 
     outputs:
       newMaintainers: ${{ steps.compare-files.outputs.newMaintainers }}
-      removedMaintainers: ${{ steps.compare-files.outputs.removedMaintainers }}
 
 
   add_maintainer:
@@ -200,27 +199,4 @@ jobs:
             const { owner, repo } = context.repo;
             const { number: issue_number } = context.issue;
             return github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage });
-
-  remove_maintainer:
-    needs: welcome
-    if: needs.welcome.outputs.removedMaintainers != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Remove maintainers from the organization
-        env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
-          for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api -X DELETE /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
-          done
-
-      - name: Remove maintainers from the team
-        env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
-          for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X DELETE
-          done
 
