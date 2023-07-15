@@ -71,10 +71,3 @@
   isTscMember: true
   repos:
     - website
-- name: Annu
-  github: all-seeing-code
-  linkedin: Annu
-  twitter: twitter-uswe
-  isTscMember: true
-  repos:
-    - website
