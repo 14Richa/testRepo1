@@ -26,7 +26,6 @@ jobs:
           path: testRepo
 
       - run: cd testRepo && git checkout HEAD^
-
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -37,9 +36,6 @@ jobs:
 
       - name: Install @octokit/rest
         run: npm install @octokit/rest
-
-      - name: Install node-fetch
-        run: npm install node-fetch
 
       - name: Compare CODEOWNERS
         id: compare-codeowners
@@ -83,7 +79,7 @@ jobs:
             const octokit = new Octokit({
               auth: process.env.BOT_TOKEN,
               request: {
-                fetch: require('node-fetch')
+                fetch: (url, options) => fetch(url, options)
               }
             });
 
