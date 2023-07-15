@@ -38,6 +38,8 @@ jobs:
       - name: Install @octokit/rest
         run: npm install @octokit/rest
 
+      - name: Install node-fetch
+        run: npm install node-fetch
 
       - name: Compare CODEOWNERS
         id: compare-codeowners
@@ -48,10 +50,6 @@ jobs:
           script: |
             const fs = require('fs');
             const yaml = require('js-yaml');
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit({
-              auth: process.env.BOT_TOKEN,
-            });
 
             // Get repository name
             const repoName = context.repo.repo;
@@ -64,10 +62,10 @@ jobs:
               }
               return matches.map(match => match.substr(1));
             }
-      
+
             const mainCodeowners = fs.readFileSync('./testRepo-main/CODEOWNERS', 'utf8');
             const prCodeowners = fs.readFileSync('./testRepo/CODEOWNERS', 'utf8');
-      
+
             const mainUsernames = extractGitHubUsernames(mainCodeowners);
             const prUsernames = extractGitHubUsernames(prCodeowners);
 
@@ -80,16 +78,26 @@ jobs:
             const maintainersFile = './testRepo-main/MAINTAINERS.yaml';
             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
 
+            const { Octokit } = require("@octokit/rest");
+            const fetch = require("node-fetch");
+
+            const octokit = new Octokit({
+              auth: process.env.BOT_TOKEN,
+              request: {
+                fetch: fetch
+              }
+            });
+
             // Update for added usernames
             for (const username of addedUsernames) {
+              const { data } = await octokit.users.getByUsername({ username });
+              const twitterUsername = data.twitter_username;
+
               // Exclude bot accounts
               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
                 console.log('Skipping bot account:', username);
                 continue; // Skip the iteration for bot accounts
               }
-
-              const { data } = await octokit.users.getByUsername({ username });
-              const twitterUsername = data.twitter_username;
 
               const existingMaintainer = maintainers.find(maintainer => maintainer.github === username);
               if (!existingMaintainer) {
@@ -132,4 +140,3 @@ jobs:
             const updatedMaintainers = yaml.safeDump(maintainers);
             fs.writeFileSync(maintainersFile, updatedMaintainers);
             console.log('Updated MAINTAINERS.yaml:', updatedMaintainers);
-
