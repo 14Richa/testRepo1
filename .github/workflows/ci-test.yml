@@ -178,20 +178,20 @@ jobs:
           for MAINTAINER in "${MAINTAINERS[@]}"; do
             gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X PUT
           done
+    outputs:
+      newMaintainers: ${{needs.welcome.outputs.newMaintainers }}
 
   display_message:
     needs: add_maintainer
-    if: needs.welcome.outputs.newMaintainers != ''
+    if: needs.add_maintainer.outputs.newMaintainers != ''
     runs-on: ubuntu-latest
     steps:
       - name: Display welcome message
-        env:
-          NEW_MAINTAINERS: ${{ needs.welcome.outputs.newMaintainers }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const newMaintainers = process.env.NEW_MAINTAINERS.split(",").map(maintainer => maintainer.trim());
+            const newMaintainers = "${{ needs.add_maintainer.outputs.newMaintainers }}".split(",");
             console.log(`New maintainers: ${newMaintainers}`);
             const welcomeMessage = newMaintainers.map((maintainer) => `@${maintainer.trim().replace(/^@/, '')} I have invited you to join the AsyncAPI organization and you will soon be added to the team that lists all Maintainers.
             
