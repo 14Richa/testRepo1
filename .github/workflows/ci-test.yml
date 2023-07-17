@@ -151,11 +151,6 @@ jobs:
       - name: Debug newMaintainers output
         run: |
           echo "newMaintainers = ${{ steps.compare-files.outputs.newMaintainers }}"
-      
-      - name: Set newMaintainers as an environment variable
-        run: echo "NEWM=$newMaintainers" >> $GITHUB_ENV
-
-
     outputs:
       newMaintainers: ${{ steps.compare-files.outputs.newMaintainers }}
       removedMaintainers: ${{ steps.compare-files.outputs.removedMaintainers }}
