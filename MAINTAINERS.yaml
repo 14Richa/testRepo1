@@ -71,3 +71,13 @@
   isTscMember: true
   repos:
     - website
+
+- name: all-se
+  github: all-seeing-code 
+  linkedin: v-th
+  twitter: thu
+  slack: U03CNJPMT7C
+  availableForHire: false
+  isTscMember: true
+  repos:
+    - website
