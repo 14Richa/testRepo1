@@ -140,7 +140,7 @@ jobs:
             if (removed.length > 0) {
               core.setOutput("removedMaintainers", removed.map((obj) => obj.github).join(","));
             }
-            
+
             core.info('Maintainers in main branch:\n' + yaml.dump(main_file));
             core.info('Location of Maintainers in main branch:');
             core.info(fs.realpathSync('./testRepo-main/MAINTAINERS.yaml'));
@@ -191,6 +191,7 @@ jobs:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
             const newMaintainers = "${{ needs.welcome.outputs.newMaintainers }}".split(",");
+            console.log(`New maintainers: ${newMaintainers}`);
             const welcomeMessage = newMaintainers.map((maintainer) => `@${maintainer.trim().replace(/^@/, '')} I have invited you to join the AsyncAPI organization and you will soon be added to the team that lists all Maintainers.
             
             We use this team to mention in different discussions in different places in GitHub where Maintainer's opinion is needed or even voting on some topic. Once Maintainers are mentioned:
