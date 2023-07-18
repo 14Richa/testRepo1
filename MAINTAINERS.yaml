@@ -80,3 +80,12 @@
   isTscMember: true
   repos:
     - website
+- name: 14Richa
+  github: 14Richa
+  linkedin: 14Richa
+  slack: U03CNHGEUR1
+  twitter: richa
+  availableForHire: true
+  isTscMember: true
+  repos:
+    - testRepo
