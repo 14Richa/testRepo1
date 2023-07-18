@@ -1,8 +1,9 @@
-### Automate paper work around project governance
+### Automate Listing of Members of the Technical Steering Committee - GSoC 2023 Project
 
-This project aims to automate maintaining the Maintainers.yaml file which contains the list of maintainers and TSC members of AsyncAPI. The tasks involve implementing workflows to automatically update the member's list based on changes in other files, inviting new maintainers and TSC members, updating the Emeritus.yaml file when someone is removed, and aggregating helpful information in the Maintainers.yaml file. These automation and improvements will make it easier to manage the maintainers and TSC members of AsyncAPI.
+This project, titled "Automate listing of members of the Technical Steering Committee", is part of the Google Summer of Code (GSoC) 2023. The goal is to automate the process of managing and maintaining the Maintainers.yaml file, which contains the list of maintainers and TSC members of AsyncAPI. Through a series of workflows, we aim to automatically update the member's list based on changes in other files, invite new maintainers and TSC members, update the Emeritus.yaml file when someone is removed, and aggregate helpful information in the Maintainers.yaml file. These automation and improvements will make it easier to manage the maintainers and TSC members of AsyncAPI.
 
-The first graph outlines the steps to automate the updating of Maintainers.yaml. This involves migrating to YAML, updating the website code to handle YAML format, automating the updation of Maintainers.yaml, creating a validation workflow to block pull requests if records are added/removed by humans, creating an update-maintainers workflow, and allowing humans to update social info and TSC member property.
+
+The first graph outlines the steps to automate the updating of Maintainers.yaml. This involves migrating to YAML, updating the website code to handle YAML format, automating the updation of Maintainers.yaml, creating a verification workflow to block pull requests if records are added/removed by humans, creating an update-maintainers workflow, and allowing humans to update social info and TSC member property.
 
 ```mermaid
 graph TD;
@@ -11,19 +12,21 @@ subgraph Migrate TSC_MEMBERS.JSON to MAINTAINERS.yml
     A[Convert TSC_MEMBERS.JSON to MAINTAINERS.yml]
 end
 
-subgraph Update website code to handle YAML format
-    B[Update website code to handle YAML format]
+subgraph Read File & Filter TSC Members
+    B1[Read new file name]
+    B2[Filter objects with TSC member flag]
+    B1 --> B2
 end
 
 subgraph Automate Maintainers.yaml update
     C[Automate Maintainers.yaml update]
-    D[Validation workflow]
+    D[Verification workflow]
     E[update-maintainers workflow]
     F[Allow humans to update social info and TSC member property]
 end
 
-A --> B
-B --> C
+A --> B1
+B2 --> C
 C --> D
 C --> E
 C --> F
@@ -123,8 +126,6 @@ graph TD;
     H --> I[Remove maintainer from the Maintainers GitHub team];
     I --> F[End];
     G --> |No| F[End]; 
-
-
 ```
 
 ### `tsc-and-maintainers-update.yaml`
@@ -249,14 +250,6 @@ H1 --> |Simple Change| N[Merge PR];
 
 TSC1 --> |True| T1[Handle TSC member addition];
 TSC1 --> |False| T2[Handle TSC member removal];
-
-Z1 --> M[End];
-L2 --> M;
-T1 --> M;
-T2 --> M;
-P --> M;
-N --> M;
-S1 --> M;
 
 subgraph Critical Attributes
 CA1[GitHub Username];
