@@ -71,17 +71,10 @@ jobs:
             const maintainersFile = './testRepo-main/MAINTAINERS.yaml';
             const maintainers = yaml.safeLoad(fs.readFileSync(maintainersFile, 'utf8'));
 
-            const { Octokit } = require("@octokit/rest");
-
-            const octokit = new Octokit({
-              request: {
-                fetch: (url, options) => fetch(url, options)
-              }
-            });
 
             // Update for added usernames
             for (const username of addedUsernames) {
-              const { data } = await octokit.users.getByUsername({ username });
+              const { data } = await github.users.getByUsername({ username: username });
               const twitterUsername = data.twitter_username;
 
               // Exclude bot accounts
