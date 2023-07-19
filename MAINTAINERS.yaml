@@ -61,25 +61,6 @@
   isTscMember: true
   repos:
     - website
-- name: Thugh
-  github: 14Richa99
-  linkedin: v-thulis
-  twitter: thulieblack
-  slack: U03CNJPMT7C
-  availableForHire: false
-  company: AsyncAPI Initiative
-  isTscMember: true
-  repos:
-    - website
-- name: 14Richa
-  github: 14Richa
-  linkedin: 14Richa
-  slack: U03CNHGEUR1
-  twitter: richa
-  availableForHire: true
-  isTscMember: true
-  repos:
-    - testRepo
 - name: all-se
   github: all-seeing-code 
   linkedin: v-th
