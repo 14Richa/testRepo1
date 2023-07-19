@@ -1,90 +1,3 @@
-# name: Welcome New Contributor
-
-# on:
-#   pull_request:
-#     types: [closed]
-#     paths:
-#       - 'MAINTAINERS.yaml'
-
-# jobs:
-#   welcome:
-#     if: github.event.pull_request.merged
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout main branch
-#         uses: actions/checkout@v2
-#         with:
-#           ref: main
-#           path: testRepo-main
-
-#       - name: Checkout one commit before last one
-#         uses: actions/checkout@v2
-#         with:
-#           fetch-depth: 2
-#           ref: main
-#           path: testRepo
-
-#       - run: cd testRepo && git checkout HEAD^
-
-#       - name: Install dependencies
-#         run: npm install js-yaml@4.1.0
-
-#       - name: Compare files
-#         id: compare-files
-#         uses: actions/github-script@v6
-#         with:
-#           script: |
-#             const fs = require('fs');
-#             const yaml = require('js-yaml');
-            
-#             const main_file = yaml.load(fs.readFileSync('./testRepo-main/MAINTAINERS.yaml', 'utf8'));
-#             const pr_file = yaml.load(fs.readFileSync('./testRepo/MAINTAINERS.yaml', 'utf8'));
-            
-#             const removed = pr_file.filter(
-#               (newObj) => !main_file.some((oldObj) => oldObj.github === newObj.github)
-#             );
-#             const added = main_file.filter(
-#               (oldObj) => !pr_file.some((newObj) => newObj.github === oldObj.github)
-#             );
-            
-#             if (added.length > 0) {
-#               core.setOutput("newMaintainers", added.map((obj) => obj.github).join(","));
-#             }
-
-#             core.info('Maintainers in main branch:\n' + yaml.dump(main_file));
-#             core.info('Location of Maintainers in main branch:');
-#             core.info(fs.realpathSync('./testRepo-main/MAINTAINERS.yaml'));
-#             core.info('Maintainers in PR branch:\n' + yaml.dump(pr_file));
-#             core.info('Location of Maintainers in PR branch:');
-#             core.info(fs.realpathSync('./testRepo/MAINTAINERS.yaml'));
-
-#       - name: Debug newMaintainers output
-#         run: |
-#           echo "newMaintainers = ${{ steps.compare-files.outputs.newMaintainers }}"
-
-#       - name: Display welcome message
-#         if: steps.compare-files.outputs.newMaintainers != ''
-#         uses: actions/github-script@v6
-#         with:
-#           github-token: ${{ secrets.BOT_TOKEN }}
-#           script: |
-#             const newMaintainers = "${{ steps.compare-files.outputs.newMaintainers }}".split(",");
-#             const welcomeMessage = newMaintainers.map((maintainer) => `@${maintainer.trim().replace(/^@/, '')} I have invited you to join the AsyncAPI organization and you will soon be added to the team that lists all Maintainers.
-            
-#             We use this team to mention in different discussions in different places in GitHub where Maintainer's opinion is needed or even voting on some topic. Once Maintainers are mentioned:
-            
-#             - You get GitHub notification
-#             - We also drop notification in our slack in #95_bot-maintainers-mentioned channel
-#             - We drop an email to people that subscribed to Maintainer news here https://www.asyncapi.com/community/maintainers
-            
-#             Pick the channel for notifications that you prefer. Welcome aboard! We are excited to have you as part of the team.`).join("\n");
-            
-#             const { owner, repo } = context.repo;
-#             const { number: issue_number } = context.issue;
-#             return github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage });
-
-
-
 name: Welcome New Contributor
 
 on:
@@ -98,7 +11,8 @@ jobs:
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+      
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v2
