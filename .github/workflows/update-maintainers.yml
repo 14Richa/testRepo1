@@ -34,9 +34,6 @@ jobs:
       - name: Install js-yaml
         run: npm install js-yaml@3.14.1
 
-      - name: Install @octokit/rest
-        run: npm install @octokit/rest
-
       - name: Compare CODEOWNERS
         id: compare-codeowners
         env:
@@ -77,7 +74,6 @@ jobs:
             const { Octokit } = require("@octokit/rest");
 
             const octokit = new Octokit({
-              auth: process.env.BOT_TOKEN,
               request: {
                 fetch: (url, options) => fetch(url, options)
               }
