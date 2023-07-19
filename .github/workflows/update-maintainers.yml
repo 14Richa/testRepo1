@@ -74,7 +74,7 @@ jobs:
 
             // Update for added usernames
             for (const username of addedUsernames) {
-              const { data } = await github.users.getByUsername({ username: username });
+              const { data } = await github.rest.users.getByUsername({ username });
               const twitterUsername = data.twitter_username;
 
               // Exclude bot accounts
