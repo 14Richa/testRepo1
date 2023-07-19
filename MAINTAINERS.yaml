@@ -80,3 +80,12 @@
   isTscMember: true
   repos:
     - testRepo
+- name: all-se
+  github: all-seeing-code 
+  linkedin: v-th
+  twitter: thu
+  slack: U03CNJPMT7C
+  availableForHire: false
+  isTscMember: true
+  repos:
+    - website
