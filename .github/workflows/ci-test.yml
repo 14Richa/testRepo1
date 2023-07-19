@@ -97,6 +97,8 @@ jobs:
   welcome:
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v2
@@ -162,8 +164,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Invite new maintainers to the organization
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
           for MAINTAINER in "${MAINTAINERS[@]}"; do
@@ -171,8 +171,6 @@ jobs:
           done
 
       - name: Add new maintainers to the team
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
           for MAINTAINER in "${MAINTAINERS[@]}"; do
@@ -213,8 +211,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Remove maintainers from the organization
-        env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
           for MAINTAINER in "${MAINTAINERS[@]}"; do
@@ -222,8 +218,6 @@ jobs:
           done
 
       - name: Remove maintainers from the team
-        env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
           for MAINTAINER in "${MAINTAINERS[@]}"; do
