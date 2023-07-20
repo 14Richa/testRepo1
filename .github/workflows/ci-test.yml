@@ -146,8 +146,6 @@ jobs:
     if: needs.welcome.outputs.removedMaintainers != ''
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
 
       - name: Remove maintainers from the organization
         uses: actions/github-script@v6
@@ -183,17 +181,23 @@ jobs:
               }
             }
 
+  update_emeritus:
+    needs: [welcome, remove_maintainer]
+    if: needs.welcome.outputs.removedMaintainers != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
       - name: Add maintainers to Emeritus.yaml
         run: |
+          # For each maintainer, append them to the Emeritus.yaml file
           for maintainer in $(echo "${{ needs.welcome.outputs.removedMaintainers }}" | tr "," "\n")
           do
-            echo "Adding $maintainer to Emeritus.yaml"
-            echo $maintainer >> Emeritus.yaml
+            echo "  - \"$maintainer\"" >> Emeritus.yaml
           done
 
-      - name: Display updated emeritus.yaml
+      - name: Display updated Emeritus.yaml
         run: |
           echo "Contents of Emeritus.yaml:"
           cat Emeritus.yaml
-
-
