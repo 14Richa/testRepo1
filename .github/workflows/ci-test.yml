@@ -146,6 +146,9 @@ jobs:
     if: needs.welcome.outputs.removedMaintainers != ''
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
       - name: Remove maintainers from the organization
         uses: actions/github-script@v6
         with:
@@ -154,15 +157,15 @@ jobs:
             const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
             for (const maintainer of removedMaintainers) {
               try {
-                // Direct API call to remove user from organization
                 await github.request('DELETE /orgs/richaOrg/memberships/{username}', {
                   username: maintainer
                 });
+                console.log(`Successfully removed ${maintainer} from the organization.`);
               } catch (error) {
                 console.error(`Failed to remove ${maintainer} from the organization:`, error);
               }
             }
-  
+
       - name: Remove maintainers from the team
         uses: actions/github-script@v6
         with:
@@ -171,13 +174,26 @@ jobs:
             const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
             for (const maintainer of removedMaintainers) {
               try {
-                // Direct API call to remove user from team
                 await github.request('DELETE /orgs/richaOrg/teams/maintainers/memberships/{username}', {
                   username: maintainer
                 });
+                console.log(`Successfully removed ${maintainer} from the team.`);
               } catch (error) {
                 console.error(`Failed to remove ${maintainer} from the team:`, error);
               }
             }
+
+      - name: Add maintainers to Emeritus.yaml
+        run: |
+          for maintainer in $(echo "${{ needs.welcome.outputs.removedMaintainers }}" | tr "," "\n")
+          do
+            echo "Adding $maintainer to Emeritus.yaml"
+            echo $maintainer >> Emeritus.yaml
+          done
+
+      - name: Display updated emeritus.yaml
+        run: |
+          echo "Contents of Emeritus.yaml:"
+          cat Emeritus.yaml
 
 
