@@ -147,19 +147,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Remove maintainers from the organization
-        env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
-          for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api -X DELETE /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
-          done
-
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
+            for (const maintainer of removedMaintainers) {
+              try {
+                await github.orgs.removeMembershipForUser({
+                  org: 'richaOrg',
+                  username: maintainer
+                });
+              } catch (error) {
+                console.error(`Failed to remove ${maintainer} from the organization:`, error);
+              }
+            }
+  
       - name: Remove maintainers from the team
-        env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
-          for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X DELETE
-          done
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
+            for (const maintainer of removedMaintainers) {
+              try {
+                await github.teams.removeMembershipForUserInOrg({
+                  org: 'richaOrg',
+                  team_slug: 'maintainers',
+                  username: maintainer
+                });
+              } catch (error) {
+                console.error(`Failed to remove ${maintainer} from the team:`, error);
+              }
+            }
+
