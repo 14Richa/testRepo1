@@ -182,22 +182,33 @@ jobs:
             }
 
   update_emeritus:
-    needs: [welcome, remove_maintainer]
-    if: needs.welcome.outputs.removedMaintainers != ''
-    runs-on: ubuntu-latest
+    needs: remove_maintainer
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Add maintainers to Emeritus.yaml
-        run: |
-          # For each maintainer, append them to the Emeritus.yaml file
-          for maintainer in $(echo "${{ needs.welcome.outputs.removedMaintainers }}" | tr "," "\n")
-          do
-            echo "  - \"$maintainer\"" >> Emeritus.yaml
-          done
+      - name: Add maintainers to Emeritus.yaml and print
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const emeritusFile = './Emeritus.yaml';
 
-      - name: Display updated Emeritus.yaml
-        run: |
-          echo "Contents of Emeritus.yaml:"
-          cat Emeritus.yaml
+            // Read the current content of the file
+            let content = fs.readFileSync(emeritusFile, 'utf8').trim(); // remove any trailing whitespaces
+
+            // Split the removed maintainers and prepare them for the yaml format
+            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'
+              .split(',')
+              .map(maintainer => `  - ${maintainer.trim()}`)
+              .join('\n');
+
+            // Append the removed maintainers to the file content
+            content = content + '\n' + removedMaintainers;
+
+            // Write the updated content back to the file
+            fs.writeFileSync(emeritusFile, content);
+
+            // Log the updated content to the console
+            console.log('Updated Emeritus.yaml:\n', content);
