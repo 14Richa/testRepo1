@@ -75,39 +75,33 @@ jobs:
     if: needs.welcome.outputs.newMaintainers != ''
     runs-on: ubuntu-latest
     steps:
-       - name: Invite new maintainers to the organization
-         uses: actions/github-script@v6
-         with: 
+      - name: Invite new maintainers to the organization
+        uses: actions/github-script@v6
+        with: 
           script: |
-            const github = require('@actions/github');
-            const newMaintainers = "${{ needs.welcome.outputs.newMaintainers }}".split(',');
+            const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
+            const token = process.env.GH_TOKEN;
+            const { exec } = require('@actions/exec');
 
-            async function inviteMaintainer(maintainer) {
-              try {
-                await github.orgs.addOrUpdateMembershipForUser({
-                  org: 'richaOrg',
-                  username: maintainer,
-                  role: 'member'
-                });
-              } catch (error) {
-                console.error(`Error inviting ${maintainer}:`, error.message);
-              }
-            }
-
-            // Invite new maintainers to the organization
             for (const maintainer of newMaintainers) {
-              await inviteMaintainer(maintainer);
+              await exec.exec('gh', ['api', `-X PUT /orgs/richaOrg/memberships/${maintainer}`, `-H "Authorization: token ${token}"`]);
             }
-
 
       - name: Add new maintainers to the team
-        run: |
-          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
-          for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X PUT
-          done
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
+            const token = process.env.GH_TOKEN;
+            const { exec } = require('@actions/exec');
+
+            for (const maintainer of newMaintainers) {
+              await exec.exec('gh', ['api', `orgs/richaOrg/teams/maintainers/memberships/${maintainer}`, `-H "Authorization: token ${token}"`, '-X PUT']);
+            }
+
     outputs:
-      newMaintainers: ${{needs.welcome.outputs.newMaintainers }}
+      newMaintainers: ${{ needs.welcome.outputs.newMaintainers }}
+
 
   display_message:
     needs: add_maintainer
