@@ -112,7 +112,15 @@ J --> E;
 
 ### `invite-maintainers.yaml`
 
-This workflow is triggered when a new maintainer is added. It calls the GitHub API to invite the maintainer to the AsyncAPI organization and adds to an existing team for the maintainers. The workflow also adds the new maintainer to the Maintainers GitHub team.
+This workflow is triggered when a new maintainer is added or when a maintainer is removed from the AsyncAPI community.
+
+If a new maintainer is added, the workflow includes the following job:
+
+- `add_maintainer`: This job calls the GitHub API to invite the maintainer to the AsyncAPI organization and adds them to an existing team for maintainers. The workflow also adds the new maintainer to the Maintainers GitHub team.
+
+If a maintainer is removed, the workflow includes the following job:
+
+- `remove_maintainer`: This job calls the GitHub API to remove the maintainer from the AsyncAPI organization and removes them from the Maintainers GitHub team. This ensures that the maintainer's access and privileges are revoked.
 
 > Note: This workflow should be located in the community repository.
 
