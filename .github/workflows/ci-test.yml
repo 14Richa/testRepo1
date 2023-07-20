@@ -82,13 +82,13 @@ jobs:
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             const token = process.env.GH_TOKEN; // Default token
 
-            for (const maintainer of newMaintainers) {
+            async function inviteMaintainer(maintainer) {
               const inviteUrl = `https://api.github.com/orgs/richaOrg/invitations`;
               const inviteBody = {
                 login: maintainer,
                 role: 'direct_member'
               };
-              
+
               const response = await fetch(inviteUrl, {
                 method: 'POST',
                 headers: {
@@ -105,6 +105,10 @@ jobs:
               }
             }
 
+            for (const maintainer of newMaintainers) {
+              await inviteMaintainer(maintainer);
+            }
+
       - name: Add new maintainers to the team
         uses: actions/github-script@v6
         with:
@@ -112,9 +116,9 @@ jobs:
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             const token = process.env.GH_TOKEN; // Default token
 
-            for (const maintainer of newMaintainers) {
+            async function addToTeam(maintainer) {
               const teamUrl = `https://api.github.com/orgs/richaOrg/teams/maintainers/memberships/${maintainer}`;
-              
+
               const response = await fetch(teamUrl, {
                 method: 'PUT',
                 headers: {
@@ -127,6 +131,10 @@ jobs:
                 const responseData = await response.json();
                 console.error(`Failed to add ${maintainer} to the team:`, responseData);
               }
+            }
+
+            for (const maintainer of newMaintainers) {
+              await addToTeam(maintainer);
             }
 
     outputs:
