@@ -180,7 +180,7 @@ jobs:
           for MAINTAINER in "${MAINTAINERS[@]}"; do
             gh api -X DELETE /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
           done
-          
+
       - name: Remove maintainers from the team
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
@@ -200,6 +200,9 @@ jobs:
     steps: 
     - name: Check out repository
       uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: npm install js-yaml@4.1.0
 
     - name: Update Emeritus.yaml
       uses: actions/github-script@v6
