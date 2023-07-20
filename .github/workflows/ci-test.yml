@@ -185,6 +185,7 @@ jobs:
 
   update_emeritus:
     needs: remove_maintainer
+    if: needs.remove_maintainer.outputs.removedMaintainers != ''
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -202,10 +203,7 @@ jobs:
             let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
   
             // Split the removed maintainers and prepare them for the yaml format
-            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'
-              .split(',')
-              .map(maintainer => `  - ${maintainer.trim()}`)
-              .join('\n');
+            const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(',').map(maintainer => `  - ${maintainer.trim()}`).join('\n');
   
             // Append the removed maintainers to the file content
             content = content + '\n' + removedMaintainers;
