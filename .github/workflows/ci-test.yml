@@ -143,6 +143,9 @@ jobs:
             const token = process.env.GH_TOKEN;
             for (const maintainer of removedMaintainers) {
               execSync(`gh api -X DELETE /orgs/richaOrg/memberships/${maintainer} -H "Authorization: token ${token}"`);
+
+               # Add the maintainer's username to the Emeritus.yaml file
+              execSync(`sed -i 's/- ${maintainer}/- ${maintainer}(emeritus)/' Emeritus.yaml`);
             }
 
       - name: Remove maintainers from the team
