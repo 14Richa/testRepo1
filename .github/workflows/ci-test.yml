@@ -144,8 +144,6 @@ jobs:
             for (const maintainer of removedMaintainers) {
               execSync(`gh api -X DELETE /orgs/richaOrg/memberships/${maintainer} -H "Authorization: token ${token}"`);
 
-               # Add the maintainer's username to the Emeritus.yaml file
-              execSync(`sed -i 's/- ${maintainer}/- ${maintainer}(emeritus)/' Emeritus.yaml`);
             }
 
       - name: Remove maintainers from the team
@@ -158,3 +156,37 @@ jobs:
             for (const maintainer of removedMaintainers) {
               execSync(`gh api -X DELETE orgs/richaOrg/teams/maintainers/memberships/${maintainer} -H "Authorization: token ${token}"`);
             }
+
+    outputs:
+      removedMaintainers: ${{ needs.welcome.outputs.removedMaintainers  }}
+
+  update_emeritus: 
+    needs: removedMaintainers
+    if: needs.removedMaintainers.outputs.removedMaintainers != ''
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Update Emeritus.yaml
+      uses: actions/github-script@v6
+      with: 
+        script: |
+          const fs = require('fs');
+          const yaml = require('js-yaml');
+          
+          const emeritusFile = './testRepo-main/Emeritus.yaml';
+          const emeritus = yaml.safeLoad(fs.readFileSync(emeritusFile, 'utf8'));
+
+          // You'll need to fetch removedMaintainers from somewhere
+          const removedMaintainers = "${{ needs.removedMaintainers.outputs.removedMaintainers }}".split(",");
+
+          removedMaintainers.forEach(maintainer => {
+              if (emeritus.maintainers.includes(maintainer)) {
+                  emeritus.maintainers = emeritus.maintainers.map(m => m === maintainer ? `${maintainer} (emeritus)` : m);
+              }
+          });
+          
+          const updatedEmeritus = yaml.safeDump(emeritus);
+          fs.writeFileSync(emeritusFile, updatedEmeritus);
+          console.log('Updated Emeritus.yaml:', updatedEmeritus);
