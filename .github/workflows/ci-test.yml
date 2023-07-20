@@ -79,24 +79,24 @@ jobs:
         uses: actions/github-script@v6
         with: 
           script: |
+            const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN;
-            const { exec } = require('@actions/exec');
-
+            const token = process.env.GH_TOKEN; // Default token
+  
             for (const maintainer of newMaintainers) {
-              await exec.exec('gh', ['api', `-X PUT /orgs/richaOrg/memberships/${maintainer}`, `-H "Authorization: token ${token}"`]);
+              execSync(`gh api -X PUT /orgs/richaOrg/memberships/${maintainer} -H "Authorization: token ${token}"`);
             }
-
+  
       - name: Add new maintainers to the team
         uses: actions/github-script@v6
         with:
           script: |
+            const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN;
-            const { exec } = require('@actions/exec');
+            const token = process.env.GH_TOKEN; // Default token
 
             for (const maintainer of newMaintainers) {
-              await exec.exec('gh', ['api', `orgs/richaOrg/teams/maintainers/memberships/${maintainer}`, `-H "Authorization: token ${token}"`, '-X PUT']);
+              execSync(`gh api -X PUT orgs/richaOrg/teams/maintainers/memberships/${maintainer} -H "Authorization: token ${token}"`);
             }
 
     outputs:
