@@ -69,7 +69,6 @@ jobs:
       newMaintainers: ${{ steps.compare-files.outputs.newMaintainers }}
       removedMaintainers: ${{ steps.compare-files.outputs.removedMaintainers }}
 
-
   add_maintainer:
     needs: welcome
     if: needs.welcome.outputs.newMaintainers != ''
@@ -78,41 +77,44 @@ jobs:
       - name: Invite new maintainers to the organization
         uses: actions/github-script@v6
         with:
+          github-token: ${{ env.GH_TOKEN }}
           script: |
-            const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN;
-
             for (const maintainer of newMaintainers) {
               try {
-                execSync(`gh api -X PUT /orgs/richaOrg/memberships/${maintainer} -H "Authorization: token ${token}"`);
+                await github.orgs.addOrUpdateMembershipForUser({
+                  org: 'richaOrg',
+                  username: maintainer,
+                  state: 'active'
+                });
               } catch (error) {
-                console.error(`Error inviting ${maintainer} to the organization:`, error);
+                console.error(`Failed to add ${maintainer} to the organization:`, error);
               }
             }
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
+        
       - name: Add new maintainers to the team
         uses: actions/github-script@v6
         with:
+          github-token: ${{ env.GH_TOKEN }}
           script: |
-            const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN;
-
             for (const maintainer of newMaintainers) {
               try {
-                execSync(`gh api -X PUT /orgs/richaOrg/teams/maintainers/memberships/${maintainer} -H "Authorization: token ${token}"`);
+                await github.teams.addOrUpdateMembershipForUserInOrg({
+                  org: 'richaOrg',
+                  team_slug: 'maintainers',
+                  username: maintainer,
+                  role: 'member'
+                });
               } catch (error) {
-                console.error(`Error adding ${maintainer} to the team:`, error);
+                console.error(`Failed to add ${maintainer} to the team:`, error);
               }
             }
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
+  
     outputs:
       newMaintainers: ${{ needs.welcome.outputs.newMaintainers }}
+
+
 
 
   display_message:
