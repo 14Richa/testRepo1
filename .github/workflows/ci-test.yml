@@ -82,11 +82,11 @@ jobs:
             const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             const token = process.env.GH_TOKEN; // Default token
-  
+
             for (const maintainer of newMaintainers) {
-              execSync(`gh api -X PUT /orgs/richaOrg/memberships/${maintainer} -H "Authorization: token ${token}"`);
+              execSync(`gh api -X POST /orgs/richaOrg/invitations -F login=${maintainer} -F role=direct_member -H "Authorization: token ${token}"`);
             }
-  
+
       - name: Add new maintainers to the team
         uses: actions/github-script@v6
         with:
