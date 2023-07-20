@@ -61,3 +61,10 @@
   isTscMember: true
   repos:
     - website
+- name: Anurag Sharma
+  github: all-seeing-code
+  slack: U03
+  availableForHire: false
+  isTscMember: true
+  repos:
+    - testRepo
