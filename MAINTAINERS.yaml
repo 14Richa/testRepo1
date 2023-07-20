@@ -68,3 +68,10 @@
   isTscMember: true
   repos:
     - testRepo
+- name: Sanju Sharma
+  github: github-bot-action
+  slack: U03
+  availableForHire: false
+  isTscMember: true
+  repos:
+    - testRepo

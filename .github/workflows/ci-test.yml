@@ -154,8 +154,8 @@ jobs:
             const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
             for (const maintainer of removedMaintainers) {
               try {
-                await github.orgs.removeMembershipForUser({
-                  org: 'richaOrg',
+                // Direct API call to remove user from organization
+                await github.request('DELETE /orgs/richaOrg/memberships/{username}', {
                   username: maintainer
                 });
               } catch (error) {
@@ -171,13 +171,13 @@ jobs:
             const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
             for (const maintainer of removedMaintainers) {
               try {
-                await github.teams.removeMembershipForUserInOrg({
-                  org: 'richaOrg',
-                  team_slug: 'maintainers',
+                // Direct API call to remove user from team
+                await github.request('DELETE /orgs/richaOrg/teams/maintainers/memberships/{username}', {
                   username: maintainer
                 });
               } catch (error) {
                 console.error(`Failed to remove ${maintainer} from the team:`, error);
               }
             }
+
 
