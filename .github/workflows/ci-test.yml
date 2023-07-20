@@ -180,6 +180,8 @@ jobs:
                 console.error(`Failed to remove ${maintainer} from the team:`, error);
               }
             }
+    outputs:
+      removedMaintainers: ${{ needs.welcome.outputs.removedMaintainers }}
 
   update_emeritus:
     needs: remove_maintainer
