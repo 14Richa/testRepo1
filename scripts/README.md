@@ -128,22 +128,17 @@ graph TD;
     G --> |No| F[End]; 
 ```
 
-### `tsc-and-maintainers-update.yaml`
+### `tsc-update.yaml`
 
-This workflow manages changes to the TSC team and the Maintainers list of a project. The workflow is triggered when there is a change to either the "tsc_member" property or the "Maintainers.yaml" file.
-
-If a maintainer is removed from the Maintainers list, the workflow removes that person from the organization and teams.
+This workflow manages changes to the TSC team of a project. The workflow is triggered when there is a change to the "tsc_member" property.
 
 If there is a change to the "tsc_member" property, the workflow adds or removes the member from the TSC team based on the value of the property. If a member is added to the TSC team, the workflow notifies affected users.
 
-If there are no changes made to the TSC team or the Maintainers list, the workflow ends.
+If there are no changes made to the TSC team, the workflow ends.
 
 ```mermaid
 graph TD;
-A[Change to tsc_member property or Maintainers.yaml?] --> |Maintainer removed| B[Remove person from organization and teams];
-A --> |No| E[End];
-
-B --> E[End];
+A[Change to tsc_member property?] --> |No| E[End];
 
 A --> |tsc_member value change| F{Add or remove member from TSC team?};
 F --> |Add| G[Add member to TSC team];
