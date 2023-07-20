@@ -161,8 +161,8 @@ jobs:
       removedMaintainers: ${{ needs.welcome.outputs.removedMaintainers  }}
 
   update_emeritus: 
-    needs: removedMaintainers
-    if: needs.removedMaintainers.outputs.removedMaintainers != ''
+    needs: remove_maintainer
+    if: needs.remove_maintainer.outputs.removedMaintainers != ''
     runs-on: ubuntu-latest
     steps: 
     - name: Check out repository
@@ -179,7 +179,7 @@ jobs:
           const emeritus = yaml.safeLoad(fs.readFileSync(emeritusFile, 'utf8'));
 
           // You'll need to fetch removedMaintainers from somewhere
-          const removedMaintainers = "${{ needs.removedMaintainers.outputs.removedMaintainers }}".split(",");
+          const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(",");
 
           removedMaintainers.forEach(maintainer => {
               if (emeritus.maintainers.includes(maintainer)) {
