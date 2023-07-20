@@ -79,24 +79,54 @@ jobs:
         uses: actions/github-script@v6
         with: 
           script: |
-            const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             const token = process.env.GH_TOKEN; // Default token
 
             for (const maintainer of newMaintainers) {
-              execSync(`gh api -X POST /orgs/richaOrg/invitations -F login=${maintainer} -F role=direct_member -H "Authorization: token ${token}"`);
+              const inviteUrl = `https://api.github.com/orgs/richaOrg/invitations`;
+              const inviteBody = {
+                login: maintainer,
+                role: 'direct_member'
+              };
+              
+              const response = await fetch(inviteUrl, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `token ${token}`,
+                  'Accept': 'application/vnd.github.v3+json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(inviteBody)
+              });
+
+              if (!response.ok) {
+                const responseData = await response.json();
+                console.error(`Failed to invite ${maintainer}:`, responseData);
+              }
             }
 
       - name: Add new maintainers to the team
         uses: actions/github-script@v6
         with:
           script: |
-            const { execSync } = require('child_process');
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             const token = process.env.GH_TOKEN; // Default token
 
             for (const maintainer of newMaintainers) {
-              execSync(`gh api -X PUT orgs/richaOrg/teams/maintainers/memberships/${maintainer} -H "Authorization: token ${token}"`);
+              const teamUrl = `https://api.github.com/orgs/richaOrg/teams/maintainers/memberships/${maintainer}`;
+              
+              const response = await fetch(teamUrl, {
+                method: 'PUT',
+                headers: {
+                  'Authorization': `token ${token}`,
+                  'Accept': 'application/vnd.github.v3+json'
+                }
+              });
+
+              if (!response.ok) {
+                const responseData = await response.json();
+                console.error(`Failed to add ${maintainer} to the team:`, responseData);
+              }
             }
 
     outputs:
