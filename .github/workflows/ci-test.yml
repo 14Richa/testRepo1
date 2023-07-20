@@ -82,10 +82,9 @@ jobs:
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             for (const maintainer of newMaintainers) {
               try {
-                await github.orgs.addOrUpdateMembershipForUser({
+                await github.request('PUT /orgs/{org}/memberships/{username}', {
                   org: 'richaOrg',
-                  username: maintainer,
-                  state: 'active'
+                  username: maintainer
                 });
               } catch (error) {
                 console.error(`Failed to add ${maintainer} to the organization:`, error);
@@ -100,17 +99,16 @@ jobs:
             const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
             for (const maintainer of newMaintainers) {
               try {
-                await github.teams.addOrUpdateMembershipForUserInOrg({
+                await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
                   org: 'richaOrg',
                   team_slug: 'maintainers',
-                  username: maintainer,
-                  role: 'member'
+                  username: maintainer
                 });
               } catch (error) {
                 console.error(`Failed to add ${maintainer} to the team:`, error);
               }
             }
-  
+
     outputs:
       newMaintainers: ${{ needs.welcome.outputs.newMaintainers }}
 
