@@ -75,12 +75,30 @@ jobs:
     if: needs.welcome.outputs.newMaintainers != ''
     runs-on: ubuntu-latest
     steps:
-      - name: Invite new maintainers to the organization
-        run: |
-          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
-          for MAINTAINER in "${MAINTAINERS[@]}"; do
-            gh api -X PUT /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
-          done
+       - name: Invite new maintainers to the organization
+         uses: actions/github-script@v6
+         with: 
+          script: |
+            const github = require('@actions/github');
+            const newMaintainers = "${{ needs.welcome.outputs.newMaintainers }}".split(',');
+
+            async function inviteMaintainer(maintainer) {
+              try {
+                await github.orgs.addOrUpdateMembershipForUser({
+                  org: 'richaOrg',
+                  username: maintainer,
+                  role: 'member'
+                });
+              } catch (error) {
+                console.error(`Error inviting ${maintainer}:`, error.message);
+              }
+            }
+
+            // Invite new maintainers to the organization
+            for (const maintainer of newMaintainers) {
+              await inviteMaintainer(maintainer);
+            }
+
 
       - name: Add new maintainers to the team
         run: |
