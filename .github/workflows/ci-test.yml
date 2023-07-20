@@ -76,62 +76,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Invite new maintainers to the organization
-        uses: actions/github-script@v6
-        with: 
-          script: |
-            const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN; // Default token
-
-            for (const maintainer of newMaintainers) {
-              const inviteUrl = `https://api.github.com/orgs/richaOrg/invitations`;
-              const inviteBody = {
-                login: maintainer,
-                role: 'direct_member'
-              };
-              
-              const response = await fetch(inviteUrl, {
-                method: 'POST',
-                headers: {
-                  'Authorization': `token ${token}`,
-                  'Accept': 'application/vnd.github.v3+json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(inviteBody)
-              });
-
-              if (!response.ok) {
-                const responseData = await response.json();
-                console.error(`Failed to invite ${maintainer}:`, responseData);
-              }
-            }
+        run: |
+          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
+          for MAINTAINER in "${MAINTAINERS[@]}"; do
+            gh api -X PUT /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
+          done
 
       - name: Add new maintainers to the team
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const newMaintainers = '${{ needs.welcome.outputs.newMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN; // Default token
-
-            for (const maintainer of newMaintainers) {
-              const teamUrl = `https://api.github.com/orgs/richaOrg/teams/maintainers/memberships/${maintainer}`;
-              
-              const response = await fetch(teamUrl, {
-                method: 'PUT',
-                headers: {
-                  'Authorization': `token ${token}`,
-                  'Accept': 'application/vnd.github.v3+json'
-                }
-              });
-
-              if (!response.ok) {
-                const responseData = await response.json();
-                console.error(`Failed to add ${maintainer} to the team:`, responseData);
-              }
-            }
-
+        run: |
+          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.newMaintainers }}"
+          for MAINTAINER in "${MAINTAINERS[@]}"; do
+            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X PUT
+          done
     outputs:
-      newMaintainers: ${{ needs.welcome.outputs.newMaintainers }}
-
+      newMaintainers: ${{needs.welcome.outputs.newMaintainers }}
 
   display_message:
     needs: add_maintainer
@@ -165,58 +123,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Remove maintainers from the organization
-        uses: actions/github-script@v6
-        with: 
-          script: |
-            const { execSync } = require('child_process');
-            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN;
-            for (const maintainer of removedMaintainers) {
-              execSync(`gh api -X DELETE /orgs/richaOrg/memberships/${maintainer} -H "Authorization: token ${token}"`);
-
-            }
+        run: |
+          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
+          for MAINTAINER in "${MAINTAINERS[@]}"; do
+            gh api -X DELETE /orgs/richaOrg/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN"
+          done
 
       - name: Remove maintainers from the team
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { execSync } = require('child_process');
-            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
-            const token = process.env.GH_TOKEN;
-            for (const maintainer of removedMaintainers) {
-              execSync(`gh api -X DELETE orgs/richaOrg/teams/maintainers/memberships/${maintainer} -H "Authorization: token ${token}"`);
-            }
+        run: |
+          IFS=',' read -ra MAINTAINERS <<< "${{ needs.welcome.outputs.removedMaintainers }}"
+          for MAINTAINER in "${MAINTAINERS[@]}"; do
+            gh api orgs/richaOrg/teams/maintainers/memberships/$MAINTAINER -H "Authorization: token $GH_TOKEN" -X DELETE
+          done
 
-    outputs:
-      removedMaintainers: ${{ needs.welcome.outputs.removedMaintainers  }}
-
-  update_emeritus: 
-    needs: remove_maintainer
-    if: needs.remove_maintainer.outputs.removedMaintainers != ''
-    runs-on: ubuntu-latest
-    steps: 
-    - name: Check out repository
-      uses: actions/checkout@v2
-
-    - name: Update Emeritus.yaml
-      uses: actions/github-script@v6
-      with: 
-        script: |
-          const fs = require('fs');
-          const yaml = require('js-yaml');
-          
-          const emeritusFile = './testRepo-main/Emeritus.yaml';
-          const emeritus = yaml.safeLoad(fs.readFileSync(emeritusFile, 'utf8'));
-
-          // You'll need to fetch removedMaintainers from somewhere
-          const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(",");
-
-          removedMaintainers.forEach(maintainer => {
-              if (emeritus.maintainers.includes(maintainer)) {
-                  emeritus.maintainers = emeritus.maintainers.map(m => m === maintainer ? `${maintainer} (emeritus)` : m);
-              }
-          });
-          
-          const updatedEmeritus = yaml.safeDump(emeritus);
-          fs.writeFileSync(emeritusFile, updatedEmeritus);
-          console.log('Updated Emeritus.yaml:', updatedEmeritus);
