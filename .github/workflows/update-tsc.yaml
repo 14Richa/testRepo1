@@ -1,0 +1,64 @@
+name: TSC Member Update
+
+on:
+  pull_request:
+    types: [closed]
+    paths:
+      - 'MAINTAINERS.yaml'
+
+jobs:
+  update_tsc_member:
+    if: github.event.pull_request.merged
+    name: Update TSC Member
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check if "isTscMember" property changed
+        id: check_changes
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const yaml = require('js-yaml');
+            const fs = require('fs');
+            // Read the maintainers.yaml file
+            fs.readFile('MAINTAINERS.yaml', 'utf8', (err, data) => {
+              if (err) {
+                console.error('Error reading the file:', err);
+                return;
+              }
+
+              try {
+                const maintainers = yaml.parse(data);
+                // Function to check if isTscMember value has changed
+                function hasIsTscMemberChanged(maintainerName) {
+                  const existingMaintainer = maintainers.find(m => m.name === maintainerName);
+                  if (!existingMaintainer) {
+                    console.error('Maintainer not found:', maintainerName);
+                    return;
+                  }
+
+                  const isTscMember = existingMaintainer.isTscMember;
+                  console.log(`isTscMember value for ${maintainerName}:`, isTscMember);
+                }
+              } 
+              catch (error) {
+                console.error('Error parsing YAML:', error);
+              }
+            });
+
+
+
+
+            
