@@ -41,21 +41,21 @@ jobs:
             const prFile = yaml.load(fs.readFileSync('./testRepo/MAINTAINERS.yaml', 'utf8')); 
 
             // Function to check if isTscMember value has changed
-            function hasIsTscMemberChanged(maintainerName) {
-              const mainMaintainer = mainFile.find(m => m.name === maintainerName);
-              const prMaintainer = prFile.find(m => m.name === maintainerName);
+            function hasIsTscMemberChanged(maintainerGithub) {
+              const mainMaintainer = mainFile.find(m => m.github === maintainerGithub);
+              const prMaintainer = prFile.find(m => m.github === maintainerGithub);
 
               if (!mainMaintainer || !prMaintainer) {
-                console.error('Maintainer not found:', maintainerName);
+                console.error('Maintainer not found:', maintainerGithub);
                 return;
               }
 
               if (mainMaintainer.isTscMember !== prMaintainer.isTscMember) {
-                console.log(`isTscMember value changed for ${maintainerName}`);
+                console.log(`isTscMember value changed for ${maintainerGithub}`);
               }
             }
 
             // Loop over all maintainers
             mainFile.forEach(maintainer => {
-              hasIsTscMemberChanged(maintainer.name);
+              hasIsTscMemberChanged(maintainer.github);
             });
