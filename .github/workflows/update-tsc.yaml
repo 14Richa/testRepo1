@@ -51,6 +51,8 @@ jobs:
               }
 
               if (mainMaintainer.isTscMember !== prMaintainer.isTscMember) {
+                const changedValue = prMaintainer.isTscMember;
+                console.log(changedValue)
                 console.log(`isTscMember value changed for ${maintainerGithub}`);
               }
             }
