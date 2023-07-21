@@ -40,6 +40,10 @@ jobs:
             const mainFile = yaml.load(fs.readFileSync('./testRepo-main/MAINTAINERS.yaml', 'utf8'));
             const prFile = yaml.load(fs.readFileSync('./testRepo/MAINTAINERS.yaml', 'utf8')); 
 
+            // Variables to store the updated value and GitHub user
+            let updatedMaintainers = [];
+            let updatedValue;
+
             // Function to check if isTscMember value has changed
             function hasIsTscMemberChanged(maintainerGithub) {
               const mainMaintainer = mainFile.find(m => m.github === maintainerGithub);
@@ -51,13 +55,15 @@ jobs:
               }
 
               if (mainMaintainer.isTscMember !== prMaintainer.isTscMember) {
-                const updatedValue = mainMaintainer.isTscMember;
-                console.log(updatedValue)
                 console.log(`isTscMember value changed for ${maintainerGithub}`);
+                updatedMaintainers.push({ githubUser: maintainerGithub, updatedValue: prMaintainer.isTscMember });
+                updatedValue = prMaintainer.isTscMember;
               }
             }
 
-            // Loop over all maintainers
-            mainFile.forEach(maintainer => {
-              hasIsTscMemberChanged(maintainer.github);
-            });
+            // Loop over all maintainers and find the changes
+            mainFile.forEach(maintainer => hasIsTscMemberChanged(maintainer.github));
+
+            // Set outputs
+            core.setOutput("updatedValue", updatedValue);
+            core.setOutput("updatedMaintainers", JSON.stringify(updatedMaintainers));
