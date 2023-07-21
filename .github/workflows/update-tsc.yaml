@@ -3,8 +3,6 @@ name: TSC Member Update
 on:
   pull_request:
     types: [closed]
-    paths:
-      - 'MAINTAINERS.yaml'
 
 jobs:
   update_tsc_member:
@@ -13,47 +11,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout main branch
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          ref: main
+          path: testRepo-main
+
+      - name: Checkout one commit before last one
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+          ref: main
+          path: testRepo
+
+      - run: cd testRepo && git checkout HEAD^
 
       - name: Install js-yaml
-        run: npm install js-yaml@3.14.1
+        run: npm install js-yaml@4.1.0
 
-      - name: Check if "isTscMember" property changed
-        id: check_changes
+      - name: Compare files
+        id: compare-files
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const yaml = require('js-yaml');
             const fs = require('fs');
-            // Read the maintainers.yaml file
-            fs.readFile('MAINTAINERS.yaml', 'utf8', (err, data) => {
-              if (err) {
-                console.error('Error reading the file:', err);
+            const yaml = require('js-yaml');
+
+            const mainFile = yaml.load(fs.readFileSync('./testRepo-main/MAINTAINERS.yaml', 'utf8'));
+            const prFile = yaml.load(fs.readFileSync('./testRepo/MAINTAINERS.yaml', 'utf8')); 
+
+            // Function to check if isTscMember value has changed
+            function hasIsTscMemberChanged(maintainerName) {
+              const mainMaintainer = mainFile.find(m => m.name === maintainerName);
+              const prMaintainer = prFile.find(m => m.name === maintainerName);
+
+              if (!mainMaintainer || !prMaintainer) {
+                console.error('Maintainer not found:', maintainerName);
                 return;
               }
 
-              try {
-                const maintainers = yaml.load(data);
-                // Function to check if isTscMember value has changed
-                function hasIsTscMemberChanged(maintainerName) {
-                  const existingMaintainer = maintainers.find(m => m.name === maintainerName);
-                  if (!existingMaintainer) {
-                    console.error('Maintainer not found:', maintainerName);
-                    return;
-                  }
-
-                  const isTscMember = existingMaintainer.isTscMember;
-                  console.log(`isTscMember value for ${maintainerName}:`, isTscMember);
-                }
-              } 
-              catch (error) {
-                console.error('Error parsing YAML:', error);
+              if (mainMaintainer.isTscMember !== prMaintainer.isTscMember) {
+                console.log(`isTscMember value changed for ${maintainerName}`);
+              } else {
+                console.log(`isTscMember value remains the same for ${maintainerName}`);
               }
+            }
+
+            // Loop over all maintainers in the main file (assuming the main file contains all maintainers)
+            mainFile.forEach(maintainer => {
+              hasIsTscMemberChanged(maintainer.name);
             });
