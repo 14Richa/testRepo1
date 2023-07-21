@@ -52,12 +52,10 @@ jobs:
 
               if (mainMaintainer.isTscMember !== prMaintainer.isTscMember) {
                 console.log(`isTscMember value changed for ${maintainerName}`);
-              } else {
-                console.log(`isTscMember value remains the same for ${maintainerName}`);
               }
             }
 
-            // Loop over all maintainers in the main file (assuming the main file contains all maintainers)
+            // Loop over all maintainers
             mainFile.forEach(maintainer => {
               hasIsTscMemberChanged(maintainer.name);
             });
