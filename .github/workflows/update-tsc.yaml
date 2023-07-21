@@ -21,8 +21,8 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install js-yaml
+        run: npm install js-yaml@3.14.1
 
       - name: Check if "isTscMember" property changed
         id: check_changes
