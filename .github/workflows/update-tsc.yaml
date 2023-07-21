@@ -40,7 +40,7 @@ jobs:
               }
 
               try {
-                const maintainers = yaml.parse(data);
+                const maintainers = yaml.load(data);
                 // Function to check if isTscMember value has changed
                 function hasIsTscMemberChanged(maintainerName) {
                   const existingMaintainer = maintainers.find(m => m.name === maintainerName);
@@ -57,8 +57,3 @@ jobs:
                 console.error('Error parsing YAML:', error);
               }
             });
-
-
-
-
-            
