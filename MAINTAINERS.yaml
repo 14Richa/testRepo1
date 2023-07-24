@@ -65,6 +65,6 @@
   github: all-seeing-code
   slack: U03
   availableForHire: false
-  isTscMember: false
+  isTscMember: true
   repos:
     - testRepo
