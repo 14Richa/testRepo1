@@ -48,7 +48,7 @@
   slack: U03A5145
   availableForHire: false
   company: GmbH
-  isTscMember: true
+  isTscMember: false
   repos:
     - dotnet-rabbitmq-template
 - name: Thulisile Sibanda
@@ -58,13 +58,13 @@
   slack: U03CNJPMT7C
   availableForHire: false
   company: AsyncAPI Initiative
-  isTscMember: true
+  isTscMember: false
   repos:
     - website
 - name: Anurag Sharma
   github: all-seeing-code
   slack: U03
   availableForHire: false
-  isTscMember: true
+  isTscMember: false
   repos:
     - testRepo
