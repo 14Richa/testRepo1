@@ -40,7 +40,7 @@
   slack: U03A51H8
   availableForHire: false
   company: GmbH
-  isTscMember: false
+  isTscMember: true
   repos:
     - dotnet-rabbitmq-template
 - name: mr-nuno
