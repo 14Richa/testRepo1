@@ -67,3 +67,31 @@ jobs:
             // Set outputs
             core.setOutput("updatedValue", updatedValue);
             core.setOutput("updatedMaintainers", JSON.stringify(updatedMaintainers));
+    outputs: 
+      updatedValue: ${{ steps.compare-files.outputs.updatedValue }}
+      updatedMaintainers: ${{ steps.compare-files.outputs.updatedMaintainers }}
+
+  add_to_tsc_members_team:
+    needs: update_tsc_member
+    if: needs.update_tsc_member.outputs.updatedValue == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Add new maintainers to the team
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const updatedMaintainers = JSON.parse('${{ needs.update_tsc_member.outputs.updatedMaintainers }}');
+            for (const maintainerObj of updatedMaintainers) {
+              const maintainer = maintainerObj.githubUser;
+              try {
+                await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
+                  org: 'richaOrg',
+                  team_slug: 'maintainers',
+                  username: maintainer
+                });
+              } catch (error) {
+                console.error(`Failed to add ${maintainer} to the team:`, error);
+              }
+            }
