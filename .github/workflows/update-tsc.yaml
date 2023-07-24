@@ -88,7 +88,7 @@ jobs:
 
   add_to_tsc_members_team:
     needs: update_tsc_member
-    if: needs.update_tsc_member.outputs.updatedValue == "true"
+    if: needs.update_tsc_member.outputs.updatedValue
     runs-on: ubuntu-latest
 
     steps:
