@@ -73,9 +73,9 @@ jobs:
 
   add_to_tsc_members_team:
     needs: update_tsc_member
-    if: needs.update_tsc_member.outputs.updatedValue == 'true'
+    if: needs.update_tsc_member.outputs.updatedValue == true
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Add new maintainers to the team
         uses: actions/github-script@v6
