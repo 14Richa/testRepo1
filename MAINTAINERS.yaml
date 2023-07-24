@@ -32,7 +32,7 @@
   slack: U03AC4G51H8
   availableForHire: false
   company: mtrail GmbH
-  isTscMember: true
+  isTscMember: false
   repos:
     - protobuf-schema-parser
 - name: connil
@@ -40,7 +40,7 @@
   slack: U03A51H8
   availableForHire: false
   company: GmbH
-  isTscMember: true
+  isTscMember: false
   repos:
     - dotnet-rabbitmq-template
 - name: mr-nuno
