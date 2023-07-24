@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout PR branch
+      - name: Checkout main branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: main
           path: testRepo-main
 
       - name: Checkout one commit before last one
@@ -67,8 +67,8 @@ jobs:
             
                 if (mainMaintainer.isTscMember !== prMaintainer.isTscMember) {
                     console.log(`isTscMember value changed for ${maintainerGithub}`);
-                    updatedMaintainers.push({ githubUser: maintainerGithub, updatedValue: prMaintainer.isTscMember });
-                    updatedValue = prMaintainer.isTscMember;
+                    updatedMaintainers.push({ githubUser: maintainerGithub, updatedValue: mainMaintainer.isTscMember });
+                    updatedValue = mainMaintainer.isTscMember;
                 }
             }
 
