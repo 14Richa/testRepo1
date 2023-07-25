@@ -1,4 +1,4 @@
-name: Welcome New Contributor
+name: Maintainer Management Workflow
 
 on:
   pull_request:
