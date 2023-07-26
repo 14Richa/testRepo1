@@ -88,51 +88,37 @@ jobs:
       updatedValue: ${{ steps.compare-files.outputs.updatedValue }}
       updatedMaintainers: ${{ steps.compare-files.outputs.updatedMaintainers }}
 
-  add_to_tsc_members_team:
+  add_or_remove_tsc_members_team:
     needs: update_tsc_member
-    if: needs.update_tsc_member.outputs.updatedValue
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add new maintainers to the team
+      - name: Add or remove maintainers from the team
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
+            const updatedValue = ${{ needs.update_tsc_member.outputs.updatedValue }};
             const updatedMaintainers = JSON.parse('${{ needs.update_tsc_member.outputs.updatedMaintainers }}');
             for (const maintainerObj of updatedMaintainers) {
               const maintainer = maintainerObj.githubUser;
               try {
-                await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
-                  org: 'richaOrg',
-                  team_slug: 'maintainers',
-                  username: maintainer
-                });
+                if (updatedValue) {
+                  // Add maintainer to the team
+                  await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
+                    org: 'richaOrg',
+                    team_slug: 'maintainers',
+                    username: maintainer
+                  });
+                  console.log(`Successfully added ${maintainer} to the team.`);
+                } else {
+                  // Remove maintainer from the team
+                  await github.request('DELETE /orgs/richaOrg/teams/maintainers/memberships/{username}', {
+                    username: maintainer
+                  });
+                  console.log(`Successfully removed ${maintainer} from the team.`);
+                }
               } catch (error) {
-                console.error(`Failed to add ${maintainer} to the team:`, error);
-              }
-            }
-
-  remove_from_tsc_members_team:
-    needs: update_tsc_member
-    if: ${{ !needs.update_tsc_member.outputs.updatedValue }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Remove maintainers from the team
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.BOT_TOKEN }}
-          script: |
-            const updatedMaintainers = JSON.parse('${{ needs.update_tsc_member.outputs.updatedMaintainers }}');
-            for (const maintainerObj of updatedMaintainers) {
-              const maintainer = maintainerObj.githubUser;
-              try {
-                await github.request('DELETE /orgs/richaOrg/teams/maintainers/memberships/{username}', {
-                  username: maintainer
-                });
-                console.log(`Successfully removed ${maintainer} from the team.`);
-              } catch (error) {
-                console.error(`Failed to remove ${maintainer} from the team:`, error);
+                console.error(`Failed to update ${maintainer} in the team:`, error);
               }
             }
