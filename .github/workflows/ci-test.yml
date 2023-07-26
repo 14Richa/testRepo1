@@ -185,7 +185,9 @@ jobs:
 
   update_emeritus:
     needs: remove_maintainer
-    if: needs.remove_maintainer.outputs.removedMaintainers != ''
+    if: |
+      needs.remove_maintainer.outputs.removedMaintainers != '' &&
+      contains(needs.remove_maintainer.outputs.removedMaintainers, 'isTscMember: true')
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
