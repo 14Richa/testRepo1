@@ -115,9 +115,9 @@ jobs:
 
   remove_from_tsc_members_team:
     needs: update_tsc_member
-    if: !needs.update_tsc_member.outputs.updatedValue 
+    if: ${{ !needs.update_tsc_member.outputs.updatedValue }}
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Remove maintainers from the team
         uses: actions/github-script@v6
