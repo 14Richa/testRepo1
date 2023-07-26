@@ -203,28 +203,28 @@ jobs:
             const fs = require('fs');
             const yaml = require('js-yaml');
             const path = './Emeritus.yaml';
-  
+
             // Read the current content of the file
             let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
-  
+
             // Get the list of maintainers from the maintainers.yaml file
             const maintainers = ${JSON.stringify(yaml.safeLoad(fs.readFileSync('./MAINTAINERS.yaml', 'utf8')))};
-  
+
             // Get the list of removed TSC maintainers from the previous step's output and split them
-            const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(',');
-  
+            const removedMaintainers = '${{ needs.remove_maintainer.outputs.removedMaintainers }}'.split(',');
+
             // Filter out non-TSC members from the list of removed maintainers
             const tscMaintainers = removedMaintainers.filter(maintainer => maintainers[maintainer.trim()] && maintainers[maintainer.trim()].isTscMember);
-  
+
             // Prepare the TSC maintainers for the yaml format
             const tscMaintainersYaml = tscMaintainers.map(maintainer => `  - ${maintainer.trim()}`).join('\n');
-  
+
             // Append the TSC maintainers to the file content
             content = content + '\n' + tscMaintainersYaml;
-  
+
             // Write the updated content back to the file
             fs.writeFileSync(path, content);
-  
+
             // Log the updated content using core.info
             core.info(`Updated Emeritus.yaml:\n${content}`);
 
