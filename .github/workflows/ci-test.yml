@@ -191,6 +191,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: npm install js-yaml@4.1.0
+
       - name: Add TSC maintainers to Emeritus.yaml and print
         id: add_emeritus
         uses: actions/github-script@v6
@@ -198,13 +201,14 @@ jobs:
           github-token: ${{ env.GH_TOKEN }}
           script: |
             const fs = require('fs');
+            const yaml = require('js-yaml');
             const path = './Emeritus.yaml';
-  
+
             // Read the current content of the file
             let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
-  
-            // Get the list of maintainers from the maintainers.yaml file
-            const maintainers = ${JSON.stringify(yaml.safeLoad(fs.readFileSync('./maintainers.yaml', 'utf8')))};
+
+            // Get the list of maintainers from the MAINTAINERS.yaml file
+            const maintainers = ${JSON.stringify(yaml.safeLoad(fs.readFileSync('./MAINTAINERS.yaml', 'utf8')))};
 
             // Get the list of removed maintainers from the previous step's output and split them
             const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(',');
