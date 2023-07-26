@@ -24,7 +24,7 @@
   twitter: kennethaasan
   availableForHire: false
   company: Sportradar
-  isTscMember: true
+  isTscMember: false
   repos:
     - modelina
 - name: Heiko Henning
