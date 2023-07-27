@@ -128,12 +128,14 @@ jobs:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
             const newTscMembers = "${{ needs.add_tsc_member.outputs.newTscMember }}".split(",");
-            console.log(`New TSC members: ${newTscMembers}`);
-            const welcomeMessage = newTscMembers.map((tscMember) => `@${tscMember.trim().replace(/^@/, '')} Welcome to the AsyncAPI Initiative's TSC Teams!\n
-            We value your expertise and look forward to collaborating with you. Feel free to engage in discussions and share your ideas with the TSC.\n
-            If you have any questions, reach out on Slack or comment on this pull request.\n
-            Congratulations, and let's make great things happen together!`).join("\n");
+            console.log(`New TSC members: ${newTscMembers}`);            
+            const welcomeMessage = newTscMembers.map(tscMember => {
+                return `@${tscMember.trim().replace(/^@/, '')} Welcome to the AsyncAPI Initiative's TSC Teams!
+                We value your expertise and look forward to collaborating with you. Feel free to engage in discussions and share your ideas with the TSC.
+                If you have any questions, reach out on Slack or comment on this pull request.
+                Congratulations, and let's make great things happen together!`
+            }).join("\n\n");
 
             const { owner, repo } = context.repo;
             const { number: issue_number } = context.issue;
-            github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage }); 
+            github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage });
