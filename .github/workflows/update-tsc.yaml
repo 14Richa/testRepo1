@@ -97,7 +97,7 @@ jobs:
       - name: Add new TSC members to the team 
         uses: actions/github-script@v6
         with:
-          github-token: ${{ env.GH_TOKEN }}
+          github-token: ${{ secrets.BOT_TOKEN }}
           script: |
             const newTscMembers = '${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}'.split(',');
             for (const tscMember of newTscMembers) {  # Renamed variable to tscMember
