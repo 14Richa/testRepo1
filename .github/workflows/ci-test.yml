@@ -55,6 +55,14 @@ jobs:
               core.setOutput("removedMaintainers", removed.map((obj) => obj.github).join(","));
             }
 
+            const removedTscMembers = pr_file.filter(
+              (newObj) => !main_file.some((oldObj) => oldObj.github === newObj.github && oldObj.isTscMember === true)
+            );
+
+            if (removedTscMembers.length > 0) {
+              core.setOutput("removedTscMembers", removedTscMembers.map((obj) => obj.github).join(","));
+            }
+
             core.info('Maintainers in main branch:\n' + yaml.dump(main_file));
             core.info('Location of Maintainers in main branch:');
             core.info(fs.realpathSync('./testRepo-main/MAINTAINERS.yaml'));
@@ -68,6 +76,8 @@ jobs:
     outputs:
       newMaintainers: ${{ steps.compare-files.outputs.newMaintainers }}
       removedMaintainers: ${{ steps.compare-files.outputs.removedMaintainers }}
+      removedTscMembers: ${{ steps.compare-files.outputs.removedTscMembers }}
+
 
   add_maintainer:
     needs: welcome
@@ -185,15 +195,13 @@ jobs:
 
   update_emeritus:
     needs: remove_maintainer
-    if: |
-      needs.remove_maintainer.outputs.removedMaintainers != '' &&
-      contains(needs.remove_maintainer.outputs.removedMaintainers, 'isTscMember: true')
+    if: needs.welcome.outputs.removedTscMembers != ''
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Add maintainers to Emeritus.yaml and print
+      - name: Add TSC members to Emeritus.yaml and print
         uses: actions/github-script@v6
         with:
           github-token: ${{ env.GH_TOKEN }}
@@ -202,17 +210,18 @@ jobs:
             const path = './Emeritus.yaml';
   
             // Read the current content of the file
-            let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
+            let content = fs.readFileSync(path, 'utf8').trim();
   
-            // Split the removed maintainers and prepare them for the yaml format
-            const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(',').map(maintainer => `  - ${maintainer.trim()}`).join('\n');
+            // Split the removed TSC members and prepare them for the yaml format
+            const removedTscMembers = "${{ needs.welcome.outputs.removedTscMembers }}".split(',').map(maintainer => `  - ${maintainer.trim()}`).join('\n');
   
-            // Append the removed maintainers to the file content
-            content = content + '\n' + removedMaintainers;
+            // Append the removed TSC members to the file content
+            content = content + '\n' + removedTscMembers;
   
             // Write the updated content back to the file
             fs.writeFileSync(path, content);
   
             // Log the updated content to the console
             console.log('Updated Emeritus.yaml:\n', content);
+
 

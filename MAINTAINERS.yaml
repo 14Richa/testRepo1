@@ -58,6 +58,6 @@
   slack: U03CNJPMT7C
   availableForHire: false
   company: AsyncAPI Initiative
-  isTscMember: false
+  isTscMember: true
   repos:
     - website
