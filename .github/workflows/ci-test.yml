@@ -56,11 +56,12 @@ jobs:
             }
 
             const removedTscMembers = pr_file.filter(
-              (newObj) => !main_file.some((oldObj) => oldObj.github === newObj.github && oldObj.isTscMember === true)
+              (obj) => !main_file.some((mainObj) => mainObj.github === obj.github) && obj.isTscMember === true
             );
 
             if (removedTscMembers.length > 0) {
               core.setOutput("removedTscMembers", removedTscMembers.map((obj) => obj.github).join(","));
+              core.info(`Removed TSC Members: ${removedTscMembers.map((obj) => obj.github).join(",")}`);
             }
 
             core.info('Maintainers in main branch:\n' + yaml.dump(main_file));
@@ -213,7 +214,8 @@ jobs:
             let content = fs.readFileSync(path, 'utf8').trim();
   
             // Split the removed TSC members and prepare them for the yaml format
-            const removedTscMembers = "${{ needs.welcome.outputs.removedTscMembers }}".split(',').map(maintainer => `  - ${maintainer.trim()}`).join('\n');
+            const removedTscMembers = "${{ needs.welcome.outputs.removedTscMembers }}".split(',');
+            console.log(`Received removedTscMembers: ${removedTscMembers}`);
   
             // Append the removed TSC members to the file content
             content = content + '\n' + removedTscMembers;
