@@ -116,3 +116,26 @@ jobs:
             addTscMembers();
     outputs:
       newTscMember: ${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}
+
+  display_message:
+    needs: add_tsc_member
+    if: needs.add_tsc_member.outputs.newTscMember != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display welcome message to new TSC members
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const newTscMembers = "${{ needs.add_tsc_member.outputs.newTscMember }}".split(",");
+            console.log(`New TSC members: ${newTscMembers}`);
+            const welcomeMessage = newTscMembers.map((tscMember) => `@${tscMember.trim().replace(/^@/, '')}, welcome to the AsyncAPI Initiative's TSC!\n
+            We value your expertise and look forward to collaborating with you.\n
+            Feel free to engage in discussions and share your ideas with the TSC.\n
+            If you have any questions, reach out on Slack or comment on this pull request.\n
+            Congratulations, and let's make great things happen together!`).join("\n");
+            
+            const { owner, repo } = context.repo;
+            const { number: issue_number } = context.issue;
+            return github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage }); 
+
