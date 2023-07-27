@@ -194,7 +194,7 @@ jobs:
       removedMaintainers: ${{ needs.welcome.outputs.removedMaintainers }}
 
   update_emeritus:
-    needs: remove_maintainer
+    needs: welcome
     if: needs.welcome.outputs.removedTscMembers != ''
     runs-on: ubuntu-latest
     steps:
