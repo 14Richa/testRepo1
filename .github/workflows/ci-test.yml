@@ -187,7 +187,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
-           script: |
+          script: |
               const removedMaintainers = "${{ needs.remove_maintainer.outputs.removedMaintainers }}".split(",");
               const removedTscMembers = "${{ needs.remove_maintainer.outputs.removedTscMembers }}".split(",");
 
