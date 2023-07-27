@@ -124,10 +124,13 @@ jobs:
     steps:
       - name: Filter GitHub users with updatedValue
         id: filter_users
-        run: |
-          const newTscMembers = JSON.parse('${{ needs.add_tsc_member.outputs.newTscMember }}');
-          const filteredUsers = newTscMembers.filter(user => user.updatedValue === true).map(user => user.githubUser);
-          core.setOutput('filteredUsers', JSON.stringify(filteredUsers));
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const newTscMembers = JSON.parse('${{ needs.add_tsc_member.outputs.newTscMember }}');
+            const filteredUsers = newTscMembers.filter(user => user.updatedValue === true).map(user => user.githubUser);
+            core.setOutput('filteredUsers', JSON.stringify(filteredUsers));
 
       - name: Display welcome message to new TSC members
         if: steps.filter_users.outputs.filteredUsers != '[]'
