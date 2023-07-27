@@ -123,9 +123,6 @@ jobs:
     outputs:
       newMaintainers: ${{ needs.welcome.outputs.newMaintainers }}
 
-
-
-
   display_message:
     needs: add_maintainer
     if: needs.add_maintainer.outputs.newMaintainers != ''
@@ -138,15 +135,10 @@ jobs:
           script: |
             const newMaintainers = "${{ needs.add_maintainer.outputs.newMaintainers }}".split(",");
             console.log(`New maintainers: ${newMaintainers}`);
-            const welcomeMessage = newMaintainers.map((maintainer) => `@${maintainer.trim().replace(/^@/, '')} I have invited you to join the AsyncAPI organization and you will soon be added to the team that lists all Maintainers.
-            
-            We use this team to mention in different discussions in different places in GitHub where Maintainer's opinion is needed or even voting on some topic. Once Maintainers are mentioned:
-            
-            - You get GitHub notification
-            - We also drop notification in our slack in #95_bot-maintainers-mentioned channel
-            - We drop an email to people that subscribed to Maintainer news here https://www.asyncapi.com/community/maintainers
-            
-            Pick the channel for notifications that you prefer. Welcome aboard! We are excited to have you as part of the team.`).join("\n");
+            const welcomeMessage = newMaintainers.map((maintainer) => `@${maintainer.trim().replace(/^@/, '')} I have invited you to join the AsyncAPI organization, and you are added to the team that lists all Maintainers.
+            Please take a moment to verify if you would like to provide more details for your account, such as your LinkedIn profile, Twitter handle, or company affiliation. In case there is anything you want to add, please open up a separate pull request for the \`MAINTAINERS.yaml\` file.
+            Additionally, if you are interested in becoming a [TSC member](https://github.com/amadeus4dev-examples/amadeus-async-flight-status) and contributing to the direction of the AsyncAPI Initiative, let us know, and we'll be happy to guide you through the process. Every maintainer has the right to become a TSC member, just open a pull request to modify your entry in \`MAINTAINER.yaml\` file and make sure \`isTscMember\` property is set to \`true\`. You can find some basic information about TSC membership in [this TSC-related guide](https://github.com/asyncapi/community/blob/master/TSC_MEMBERSHIP.md). Feel free to reach out to us for more help by dropping a comment in this pull request, or by asking for help in our Slack.
+            Welcome aboard! We are excited to have you as part of the team.`).join("\n");
             
             const { owner, repo } = context.repo;
             const { number: issue_number } = context.issue;
@@ -194,11 +186,9 @@ jobs:
               // Goodbye message to removed maintainers and notification to TSC members
               const combinedMessage = removedMaintainers.map((maintainer) => {
                 const tscNotification = removedTscMembers.includes(maintainer)
-                  ? `We want to inform you that a TSC member has decided to step down from their role as a maintainer. Their contributions have been valuable to the project, and we are grateful for their efforts.`
+                  ? `@asyncapi/tsc_members We want to inform you that @${maintainer.trim().replace(/^@/, '')} is no longer a maintainer of any repository under AsyncAPI Initiative. It means this maintainer is also no longer a member of TSC.`
                   : '';
-
-                return `@${maintainer.trim().replace(/^@/, '')} We wanted to express our gratitude for your contributions as a maintainer to our project. Your efforts have been immensely valuable to us, and we truly appreciate your dedication. Thank you once again, and we wish you all the best in your future endeavors!\n\n${tscNotification}`;
-              }).join('\n');
+                return `@${maintainer.trim().replace(/^@/, '')} We wanted to express our gratitude for your contributions as a maintainer of AsyncAPI Initiative. Your efforts have been immensely valuable to us, and we truly appreciate your dedication. Thank you once again, and we wish you all the best in your future endeavors!\n\n${tscNotification}`;
 
               const { owner, repo } = context.repo;
               const { number: issue_number } = context.issue;
