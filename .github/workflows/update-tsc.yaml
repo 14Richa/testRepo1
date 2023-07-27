@@ -122,19 +122,27 @@ jobs:
     if: needs.add_tsc_member.outputs.newTscMember != ''
     runs-on: ubuntu-latest
     steps:
+      - name: Filter GitHub users with updatedValue
+        id: filter_users
+        run: |
+          const newTscMembers = JSON.parse('${{ needs.add_tsc_member.outputs.newTscMember }}');
+          const filteredUsers = newTscMembers.filter(user => user.updatedValue === true).map(user => user.githubUser);
+          core.setOutput('filteredUsers', JSON.stringify(filteredUsers));
+
       - name: Display welcome message to new TSC members
+        if: steps.filter_users.outputs.filteredUsers != '[]'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const newTscMembers = "${{ needs.add_tsc_member.outputs.newTscMember }}".split(",");
-            console.log(`New TSC members: ${newTscMembers}`);            
+            const newTscMembers = ${{ steps.filter_users.outputs.filteredUsers }};
+            console.log(`New TSC members: ${newTscMembers}`);
             const welcomeMessage = newTscMembers.map(tscMember => {
                 return `@${tscMember.trim().replace(/^@/, '')} Welcome to the AsyncAPI Initiative's TSC Teams!
                 We value your expertise and look forward to collaborating with you. Feel free to engage in discussions and share your ideas with the TSC.
                 If you have any questions, reach out on Slack or comment on this pull request.
                 Congratulations, and let's make great things happen together!`
-            }).join("\n\n");
+            }).join('\n\n');
 
             const { owner, repo } = context.repo;
             const { number: issue_number } = context.issue;
