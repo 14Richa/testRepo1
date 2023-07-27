@@ -51,3 +51,8 @@
   isTscMember: true
   repos:
     - dotnet-rabbitmq-template
+- name: Sanju Sharma
+  github: github-bot-action
+  company: GmbH
+  repos:
+    - testRepo
