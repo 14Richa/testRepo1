@@ -174,23 +174,6 @@ jobs:
                 console.error(`Failed to remove ${maintainer} from the organization:`, error);
               }
             }
-
-      - name: Remove maintainers from the team
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ env.GH_TOKEN }}
-          script: |
-            const removedMaintainers = '${{ needs.welcome.outputs.removedMaintainers }}'.split(',');
-            for (const maintainer of removedMaintainers) {
-              try {
-                await github.request('DELETE /orgs/richaOrg/teams/maintainers/memberships/{username}', {
-                  username: maintainer
-                });
-                console.log(`Successfully removed ${maintainer} from the team.`);
-              } catch (error) {
-                console.error(`Failed to remove ${maintainer} from the team:`, error);
-              }
-            }
     outputs:
       removedMaintainers: ${{ needs.welcome.outputs.removedMaintainers }}
 
