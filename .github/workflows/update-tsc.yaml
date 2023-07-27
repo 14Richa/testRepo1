@@ -92,25 +92,27 @@ jobs:
     needs: detect_tsc_changes
     if: needs.detect_tsc_changes.outputs.updatedValue == 'true'
     runs-on: ubuntu-latest
-
     steps:
-      - name: Add new TSC members to the team 
+      - name: Add new TSC members to the team
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const newTscMembers = '${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}'.split(',');
-            for (const tscMember of newTscMembers) {  # Renamed variable to tscMember
-              try {
-                await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
-                  org: 'richaOrg',
-                  team_slug: 'maintainers',
-                  username: tscMember  # Renamed variable to tscMember
-                });
-              } catch (error) {
-                console.error(`Failed to add ${tscMember} to the team:`, error);  # Renamed variable to tscMember
+            async function addTscMembers() {  // Wrap the script in an asynchronous function
+              const newTscMembers = '${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}'.split(',');
+              for (const tscMember of newTscMembers) {
+                try {
+                  await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
+                    org: 'richaOrg',
+                    team_slug: 'maintainers',
+                    username: tscMember
+                  });
+                } catch (error) {
+                  console.error(`Failed to add ${tscMember} to the team:`, error);
+                }
               }
             }
 
+            addTscMembers();
     outputs:
-      newTscMember: ${{ needs.detect_tsc_changes.outputs.updatedMaintainers }} 
+      newTscMember: ${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}
