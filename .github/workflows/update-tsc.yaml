@@ -170,8 +170,11 @@ jobs:
             // Read the current content of the file
             let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
 
-            // Split the added maintainers and prepare them for the yaml format
-            const addedTscMembers = ${{ steps.compare-files.outputs.updatedMaintainers }}
+            // Parse the updatedMaintainers JSON string to an array of objects
+            const updatedMaintainers = JSON.parse('${{ steps.compare-files.outputs.updatedMaintainers }}');
+
+            // Filter the maintainers whose updatedValue is true and prepare them for the yaml format
+            const addedTscMembers = updatedMaintainers
               .filter(maintainer => maintainer.updatedValue === true)
               .map(maintainer => `  - ${maintainer.githubUser.trim()}`)
               .join('\n');
