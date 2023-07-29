@@ -127,15 +127,15 @@ jobs:
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const removedMaintainers = '${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}'.split(',');
+            const removedMaintainers = ${{ needs.detect_tsc_changes.outputs.updatedMaintainers }};
             for (const maintainer of removedMaintainers) {
               try {
                 await github.request('DELETE /orgs/richaOrg/maintainerships/{username}', {
-                  username: maintainer
+                  username: maintainer.githubUser
                 });
-                core.info(`Successfully removed ${maintainer} from the organization.`);
+                core.info(`Successfully removed ${maintainer.githubUser} from the organization.`);
               } catch (error) {
-                core.setFailed(`Failed to remove ${maintainer} from the organization: ${error.message}`);
+                core.setFailed(`Failed to remove ${maintainer.githubUser} from the organization: ${error.message}`);
               }
             }
 
