@@ -150,3 +150,39 @@ jobs:
             const { owner, repo } = context.repo;
             const { number: issue_number } = context.issue;
             github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage });
+
+  update_emeritus:
+    needs: detect_tsc_changes
+    if: needs.detect_tsc_changes.outputs.updatedValue == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Add TSC members to Emeritus.yaml and print
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = './Emeritus.yaml';
+
+            // Read the current content of the file
+            let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
+
+            // Split the added maintainers and prepare them for the yaml format
+            const addedTscMembers = ${{ steps.compare-files.outputs.updatedMaintainers }}
+              .filter(maintainer => maintainer.updatedValue === true)
+              .map(maintainer => `  - ${maintainer.githubUser.trim()}`)
+              .join('\n');
+
+            // Append the added maintainers to the file content
+            if (addedTscMembers) {
+              content = content + '\n' + addedTscMembers;
+            }
+
+            // Write the updated content back to the file
+            fs.writeFileSync(path, content);
+
+            // Log the updated content to the console
+            console.log('Updated Emeritus.yaml:\n', content);
