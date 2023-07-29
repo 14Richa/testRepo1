@@ -152,12 +152,12 @@ jobs:
             github.rest.issues.createComment({ owner, repo, issue_number, body: welcomeMessage });
 
   update_emeritus:
-    needs: detect_tsc_changes
-    if: needs.detect_tsc_changes.outputs.updatedValue == 'true'
+    needs: add_tsc_member
+    if: needs.add_tsc_member.outputs.newTscMember != ''
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Add TSC members to Emeritus.yaml and print
         uses: actions/github-script@v6
@@ -171,7 +171,7 @@ jobs:
             let content = fs.readFileSync(path, 'utf8').trim(); // remove any trailing whitespaces
 
             // Parse the updatedMaintainers JSON string to an array of objects
-            const updatedMaintainers = JSON.parse('${{ steps.compare-files.outputs.updatedMaintainers }}');
+            const updatedMaintainers = JSON.parse('${{ needs.add_tsc_member.outputs.newTscMember }}');
 
             // Filter the maintainers whose updatedValue is true and prepare them for the yaml format
             const addedTscMembers = updatedMaintainers
