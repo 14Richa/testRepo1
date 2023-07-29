@@ -127,7 +127,7 @@ jobs:
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const removedMaintainers = '${{ needs.detect_tsc_changes.outputs.updatedValue }}'.split(',');
+            const removedMaintainers = '${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}'.split(',');
             for (const maintainer of removedMaintainers) {
               try {
                 await github.request('DELETE /orgs/richaOrg/maintainerships/{username}', {
