@@ -98,22 +98,17 @@ jobs:
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            async function addTscMembers() {  // Wrap the script in an asynchronous function
-              const newTscMembers = '${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}'.split(',');
-              for (const tscMember of newTscMembers) {
-                try {
-                  await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
-                    org: 'richaOrg',
-                    team_slug: 'maintainers',
-                    username: tscMember
-                  });
-                } catch (error) {
-                  console.error(`Failed to add ${tscMember} to the team:`, error);
-                }
+            const newTscMembers = ${{ needs.detect_tsc_changes.outputs.updatedMaintainers }};
+            for (const tscMember of newTscMembers) {
+              try {
+                await github.request('PUT /orgs/richaOrg/teams/maintainers/memberships/{username}', {
+                  username: tscMember.githubUser
+                });
+                core.info(`Successfully added ${tscMember.githubUser} to the team.`);
+              } catch (error) {
+                core.setFailed(`Failed to add ${tscMember.githubUser} to the team: ${error.message}`);
               }
             }
-
-            addTscMembers();
     outputs:
       newTscMember: ${{ needs.detect_tsc_changes.outputs.updatedMaintainers }}
 
@@ -122,7 +117,7 @@ jobs:
     if: needs.detect_tsc_changes.outputs.updatedValue == 'false'
     runs-on: ubuntu-latest
     steps:
-      - name: Remove TSC members from the organization
+      - name: Remove TSC members from the team
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
@@ -133,9 +128,9 @@ jobs:
                 await github.request('DELETE /orgs/richaOrg/maintainerships/{username}', {
                   username: maintainer.githubUser
                 });
-                core.info(`Successfully removed ${maintainer.githubUser} from the organization.`);
+                core.info(`Successfully removed ${maintainer.githubUser} from the team.`);
               } catch (error) {
-                core.setFailed(`Failed to remove ${maintainer.githubUser} from the organization: ${error.message}`);
+                core.setFailed(`Failed to remove ${maintainer.githubUser} from the team: ${error.message}`);
               }
             }
 
