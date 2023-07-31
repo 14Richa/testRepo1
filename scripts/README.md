@@ -126,6 +126,40 @@ A --> |No| E[End];
 ```
 
 
+### `maintainer_management.yaml 
+
+This workflow is triggered whenever a pull request is closed in the repository. The workflow aims to manage changes in the MAINTAINERS.yaml file, specifically detecting additions, removals, or updates to maintainers.
+
+When the workflow is triggered, it first detects any changes in the maintainers' list through the `detect_maintainer_changes` job. Depending on the changes identified, the workflow branches into different paths.
+
+If new maintainers are added, the workflow proceeds to the Send invite to join org and team job, which sends invitations to the newly added maintainers to join the organization and the maintainers' team. After that, the workflow proceeds to the Send welcome message job, which sends a welcome message to the new maintainers, providing them with information about the organization and team.
+
+On the other hand, if maintainers are removed, the workflow proceeds to the Remove the maintainer from org job, which removes the identified maintainers from the organization. Additionally, the workflow sends a goodbye message to the removed maintainers through the Send goodbye message job.
+
+In case the maintainers' list is updated, indicating changes in TSC members, the workflow proceeds to the Update emeritus with removed maintainer job. This job updates the Emeritus.yaml file to reflect the changes in TSC membership.
+
+> Note: This workflow should be located in the community repository.
+
+
+```mermaid
+graph TD;
+A[on: pull_request closed] -->|Merged PR| B{detect_maintainer_changes};
+
+B -->|maintainer is added| C[Send invite to join org and team];
+B -->|maintainer is removed| D[Remove the maintainer from org];
+B -->|update| E[Update emeritus with removed maintainer who is tsc member];
+
+C --> F[Send welcome message];
+D --> G[Send goodbye message];
+
+E --> Z[End];
+F --> Z;
+G --> Z;
+```
+
+
+================================================================================================================================================
+
 ### `invite-maintainers.yaml`
 
 This workflow is triggered when a new maintainer is added. It calls the GitHub API to invite the maintainer to the AsyncAPI organization and adds to an existing team for the maintainers. The workflow also adds the new maintainer to the Maintainers GitHub team.
