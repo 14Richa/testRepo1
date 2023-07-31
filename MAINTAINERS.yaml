@@ -45,6 +45,6 @@
     - dotnet-rabbitmq-template
 - name: sanju
   github: github-bot-action
-  isTscMember: false
+  isTscMember: true
   repos:
     - dotnet-rabbitmq-template

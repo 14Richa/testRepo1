@@ -200,7 +200,7 @@ jobs:
 
   update_emeritus:
     needs: remove_tsc_member
-    if: needs.add_tsc_member.outputs.removedMaintainers != ''
+    if: needs.remove_tsc_member.outputs.removedMaintainers != ''
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
