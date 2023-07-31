@@ -115,18 +115,14 @@ If there is a change to the `isTscMember` property, the workflow handles the add
 
 ```mermaid
 graph TD;
-A[Change to tsc_member property or Maintainers.yaml?] --> |Maintainer removed| B[Remove person from organization and teams];
-A --> |No| E[End];
+A[Change to tsc_member property or Maintainers.yaml?] --> |tsc_member value change| F{Add or remove member from TSC team?};
+F --> |Add| I
 
-B --> E[End];
-
-A --> |tsc_member value change| F{Add or remove member from TSC team?};
-F --> |Add| G[Add member to TSC team];
-G --> H[Update TSC team membership];
-H --> I[Notify affected users];
+H[Update TSC team membership] --> I[Notify affected users];
 I --> E[End];
 F --> |Remove| K[Remove member from TSC team];
-K --> H;
+K --> H; 
+A --> |No| E[End];
 ```
 
 
