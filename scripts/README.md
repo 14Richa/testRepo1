@@ -126,7 +126,7 @@ A --> |No| E[End];
 ```
 
 
-### `maintainer_management.yaml 
+### `maintainer_management.yaml` 
 
 This workflow is triggered whenever a pull request is closed in the repository. The workflow aims to manage changes in the MAINTAINERS.yaml file, specifically detecting additions, removals, or updates to maintainers.
 
@@ -158,7 +158,7 @@ G --> Z;
 ```
 
 
-================================================================================================================================================
+==========================================================================
 
 ### `invite-maintainers.yaml`
 
