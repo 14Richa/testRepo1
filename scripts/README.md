@@ -106,21 +106,33 @@ F --> |Maintainer has no other repositories| I[Remove maintainer from Maintainer
 H --> J[Notify affected users];
 I --> J;
 J --> E;
-
-
 ```
+### `tsc_management.yaml`
+
+This workflow manages changes to the `tsc_members` team and the Maintainers list of a project. The workflow is triggered when there is a change to either the `isTscMember` property.
+
+If there is a change to the `isTscMember` property, the workflow handles the addition or removal of the member from the TSC team based on the value of the property. If a member is added to the  `tsc_members` team, the workflow notifies affected users.
+
+```mermaid
+graph TD;
+A[Change to tsc_member property or Maintainers.yaml?] --> |Maintainer removed| B[Remove person from organization and teams];
+A --> |No| E[End];
+
+B --> E[End];
+
+A --> |tsc_member value change| F{Add or remove member from TSC team?};
+F --> |Add| G[Add member to TSC team];
+G --> H[Update TSC team membership];
+H --> I[Notify affected users];
+I --> E[End];
+F --> |Remove| K[Remove member from TSC team];
+K --> H;
+```
+
 
 ### `invite-maintainers.yaml`
 
-This workflow is triggered when a new maintainer is added or when a maintainer is removed from the AsyncAPI community.
-
-If a new maintainer is added, the workflow includes the following job:
-
-- `add_maintainer`: This job calls the GitHub API to invite the maintainer to the AsyncAPI organization and adds them to an existing team for maintainers. The workflow also adds the new maintainer to the Maintainers GitHub team.
-
-If a maintainer is removed, the workflow includes the following job:
-
-- `remove_maintainer`: This job calls the GitHub API to remove the maintainer from the AsyncAPI organization and removes them from the Maintainers GitHub team. This ensures that the maintainer's access and privileges are revoked.
+This workflow is triggered when a new maintainer is added. It calls the GitHub API to invite the maintainer to the AsyncAPI organization and adds to an existing team for the maintainers. The workflow also adds the new maintainer to the Maintainers GitHub team.
 
 > Note: This workflow should be located in the community repository.
 
@@ -136,26 +148,7 @@ graph TD;
     G --> |No| F[End]; 
 ```
 
-### `tsc-update.yaml`
 
-This workflow manages changes to the TSC team of a project. The workflow is triggered when there is a change to the "tsc_member" property.
-
-If there is a change to the "tsc_member" property, the workflow adds or removes the member from the TSC team based on the value of the property. If a member is added to the TSC team, the workflow notifies affected users.
-
-If there are no changes made to the TSC team, the workflow ends.
-
-```mermaid
-graph TD;
-A[Change to tsc_member property?] --> |No| E[End];
-
-A --> |tsc_member value change| F{Add or remove member from TSC team?};
-F --> |Add| G[Add member to TSC team];
-G --> H[Update TSC team membership];
-H --> I[Notify affected users];
-I --> E[End];
-F --> |Remove| K[Remove member from TSC team];
-K --> H;
-```
 
 ### `msg-to-new-member-pr-merged.yml`
 
