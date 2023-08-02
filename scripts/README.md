@@ -134,12 +134,11 @@ When the workflow is triggered, it first detects any changes in the maintainers'
 
 If new maintainers are added, the workflow proceeds to the Send invite to join org and team job, which sends invitations to the newly added maintainers to join the organization and the maintainers' team. After that, the workflow proceeds to the Send welcome message job, which sends a welcome message to the new maintainers, providing them with information about the organization and team.
 
-On the other hand, if maintainers are removed, the workflow proceeds to the Remove the maintainer from org job, which removes the identified maintainers from the organization. Additionally, the workflow sends a goodbye message to the removed maintainers through the Send goodbye message job.
+On the other hand, if maintainers are removed, the workflow proceeds to the remove the maintainer from org job, which removes the identified maintainers from the organization. Additionally, the workflow sends a goodbye message to the removed maintainers through the Send goodbye message job.
 
-In case the maintainers' list is updated, indicating changes in TSC members, the workflow proceeds to the Update emeritus with removed maintainer job. This job updates the Emeritus.yaml file to reflect the changes in TSC membership.
+In case the maintainers' list is updated, indicating changes in TSC members, the workflow proceeds to the Update emeritus with the removed maintainer job. This job updates the Emeritus.yaml file to reflect the changes in TSC membership.
 
 > Note: This workflow should be located in the community repository.
-
 
 ```mermaid
 graph TD;
@@ -155,44 +154,6 @@ D --> G[Send goodbye message];
 E --> Z[End];
 F --> Z;
 G --> Z;
-```
-
-
-==========================================================================
-
-### `invite-maintainers.yaml`
-
-This workflow is triggered when a new maintainer is added. It calls the GitHub API to invite the maintainer to the AsyncAPI organization and adds to an existing team for the maintainers. The workflow also adds the new maintainer to the Maintainers GitHub team.
-
-> Note: This workflow should be located in the community repository.
-
-```mermaid
-graph TD;
-    A[Is a new maintainer added to the AsyncAPI community?] --> |Yes| B[Call GitHub API to invite maintainer to the organization];
-    B --> C[Add maintainer to the Maintainers GitHub team];
-    C --> F[End];
-    A --> |No| G[Is a maintainer removed from the AsyncAPI community?];
-    G --> |Yes| H[Call GitHub API to remove maintainer from the organization];
-    H --> I[Remove maintainer from the Maintainers GitHub team];
-    I --> F[End];
-    G --> |No| F[End]; 
-```
-
-
-
-### `msg-to-new-member-pr-merged.yml`
-
-This workflow is triggered when a new member is added to the TSC. It notifies the new member about ways to get notified when TSC members are called out and notifies other TSC members by mentioning the GitHub team.
-
-> Note: This workflow should be located in the community repository.
-> This one is already present.
-
-```mermaid
-graph TD;
-A[PR modifies tsc_member to true?] --> |Yes| B[Notify new member about ways to get notified];
-B --> C[Notify TSC members about new member];
-C --> D[End];
-A --> |No| D[End];
 ```
 
 ### `update-emeritus.yaml`
