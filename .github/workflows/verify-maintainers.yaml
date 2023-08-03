@@ -94,11 +94,11 @@ jobs:
             console.log('Error messages:', errorMessages);
             // Set the error messages as an output
             console.log('Setting error messages output...');
-            core.setOutput('error-messages', errorMessages.join('\n'));
+            core.setOutput('errorMessages', errorMessages.join('\n'));
 
         
     outputs: 
-      errorMessages: ${{ steps. verify-changes.outputs.errorMessages }}
+      errorMessages: ${{ steps.verify-changes.outputs.errorMessages }}
 
   close-pr-and-comment-job:
     needs: verify-changes
