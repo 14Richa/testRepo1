@@ -95,7 +95,6 @@ jobs:
             console.log('Setting error messages output...');
             core.setOutput('errorMessages', errorMessages.join('\n'));
 
-        
     outputs: 
       errorMessages: ${{ steps.verify-changes.outputs.errorMessages }}
 
@@ -108,12 +107,11 @@ jobs:
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.BOT_TOKEN}}
-        ERROR_MESSAGES: ${{ needs.verify-changes.outputs.errorMessages }}
         script: |
           const owner = context.repo.owner;
           const repo = context.repo.repo;
           const pull_number = context.issue.number;
-          const errorMessages = JSON.parse(process.env.ERROR_MESSAGES);
+          const errorMessages =  ${{ needs.verify-changes.outputs.errorMessages }}
           const commentBody = errorMessages.join('\n');
           github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody }); 
           github.pulls.update({ owner, repo, pull_number, state: 'closed' }); 
