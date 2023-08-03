@@ -88,6 +88,10 @@ jobs:
                   }
                 }
               }
+              if (errorMessages.length > 0) {
+              // Return a stringified JSON array of error messages
+              return JSON.stringify(errorMessages);
+              }
             }
 
             // Console log the error messages
@@ -105,15 +109,16 @@ jobs:
     if: needs.verify-changes.outputs.errorMessages != ''
     runs-on: ubuntu-latest
     steps:
-      - name: Comment on the PR if there are errors
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.BOT_TOKEN}}
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const pull_number = context.issue.number;
-            const errorMessages = JSON.parse('${{ needs.verify-changes.outputs.errorMessages }}');
-            const commentBody = errorMessages.join('\n');
-            github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody }); 
-            github.pulls.update({ owner, repo, pull_number, state: 'closed' });
+    - name: Comment on the PR if there are errors
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.BOT_TOKEN}}
+        ERROR_MESSAGES: ${{ needs.verify-changes.outputs.errorMessages }}
+        script: |
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const pull_number = context.issue.number;
+          const errorMessages = JSON.parse(process.env.ERROR_MESSAGES);
+          const commentBody = errorMessages.join('\n');
+          github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody }); 
+          github.pulls.update({ owner, repo, pull_number, state: 'closed' }); 
