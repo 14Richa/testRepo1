@@ -89,6 +89,13 @@ jobs:
                 }
               }
             }
+
+            // Console log the error messages
+            console.log('Error messages:', errorMessages);
+            // Set the error messages as an output
+            console.log('Setting error messages output...');
+            core.setOutput('error-messages', errorMessages.join('\n'));
+
         
     outputs: 
       errorMessages: ${{ steps. verify-changes.outputs.errorMessages }}
@@ -106,6 +113,7 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const pull_number = context.issue.number;
-            const errorMessages = JSON.parse("${{ needs.verify-changes.outputs.errorMessages }}");
+            const errorMessages = JSON.parse('${{ needs.verify-changes.outputs.errorMessages }}');
             const commentBody = errorMessages.join('\n');
-            github.rest.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
+            github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody }); 
+            github.pulls.update({ owner, repo, pull_number, state: 'closed' });
