@@ -99,10 +99,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment on the PR if there are errors
-        if: ${{ needs.verify-changes-job.outputs.errorMessages != }}
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GH_TOKEN}}
+          github-token: ${{ secrets.BOT_TOKEN}}
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
