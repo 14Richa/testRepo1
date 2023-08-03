@@ -40,7 +40,7 @@ jobs:
             const prFile = yaml.load(fs.readFileSync("./pr-branch/MAINTAINERS.yaml", "utf8"));
 
             const beforeMaintainers = new Map(mainFile.map((maintainer) => [maintainer.name, {github: maintainer.github, repos: maintainer.repos || []}]));
-            let errorMessages = "";
+            let errorMessages = [];
 
             const owner = context.repo.owner;
             const repo = context.repo.repo;
@@ -93,25 +93,28 @@ jobs:
             console.log('Error messages:', errorMessages);
             // Set the error messages as an output
             console.log('Setting error messages output...');
-            core.setOutput('errorMessages', errorMessages.join('\n'));
+            core.setOutput('errorMessages', JSON.stringify(errorMessages));
 
     outputs: 
       errorMessages: ${{ steps.verify-changes.outputs.errorMessages }}
 
   close-pr-and-comment-job:
     needs: verify-changes
-    if: needs.verify-changes.outputs.errorMessages != ''
+    if: needs.verify-changes.outputs.errorMessages != '[]'
     runs-on: ubuntu-latest
     steps:
-    - name: Comment on the PR if there are errors
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.BOT_TOKEN}}
-        script: |
-          const owner = context.repo.owner;
-          const repo = context.repo.repo;
-          const pull_number = context.issue.number;
-          const errorMessages =  ${{ needs.verify-changes.outputs.errorMessages }}
-          const commentBody = errorMessages.join('\n');
-          github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody }); 
-          github.pulls.update({ owner, repo, pull_number, state: 'closed' }); 
+      - name: Comment on the PR if there are errors
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = context.issue.number;
+
+            // Parsing the stringified array directly
+            const errorMessages = JSON.parse('${{ needs.verify-changes.outputs.errorMessages }}'); 
+
+            const commentBody = errorMessages.join('\n');
+            github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
+            github.pulls.update({ owner, repo, pull_number, state: 'closed' });
