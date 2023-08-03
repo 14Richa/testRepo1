@@ -89,12 +89,6 @@ jobs:
                 }
               }              
             }
-
-            if (errorMessages.length > 0) {
-              // Return a stringified JSON array of error messages
-              return JSON.stringify(errorMessages);
-            }
-
             // Console log the error messages
             console.log('Error messages:', errorMessages);
             // Set the error messages as an output
