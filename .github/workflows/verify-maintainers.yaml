@@ -87,11 +87,12 @@ jobs:
                     errorMessages.push(`Repositories (${removedRepos.join(', ')}) have been removed from ${maintainer.name}'s repository list in MAINTAINERS.yaml. Only asyncapi-bot can make such changes. This information is derived from the CODEOWNERS file located in any repository under AsyncAPI GitHub organization.`);
                   }
                 }
-              }
-              if (errorMessages.length > 0) {
+              }              
+            }
+
+            if (errorMessages.length > 0) {
               // Return a stringified JSON array of error messages
               return JSON.stringify(errorMessages);
-              }
             }
 
             // Console log the error messages
