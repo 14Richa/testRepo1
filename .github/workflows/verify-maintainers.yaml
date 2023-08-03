@@ -116,5 +116,5 @@ jobs:
             const errorMessages = JSON.parse(rawErrorMessages); 
 
             const commentBody = errorMessages.join('\n');
-            github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
-            github.pulls.update({ owner, repo, pull_number, state: 'closed' });
+            github.rest.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
+            github.rest.pulls.update({ owner, repo, pull_number, state: 'closed' });
