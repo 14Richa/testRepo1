@@ -108,12 +108,12 @@ jobs:
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
+            const rawErrorMessages = `${{ needs.verify-changes.outputs.errorMessages }}`;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const pull_number = context.issue.number;
 
-            // Parsing the stringified array directly
-            const errorMessages = JSON.parse('${{ needs.verify-changes.outputs.errorMessages }}'); 
+            const errorMessages = JSON.parse(rawErrorMessages); 
 
             const commentBody = errorMessages.join('\n');
             github.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
