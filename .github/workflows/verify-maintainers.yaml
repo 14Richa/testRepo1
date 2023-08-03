@@ -40,7 +40,7 @@ jobs:
             const prFile = yaml.load(fs.readFileSync("./pr-branch/MAINTAINERS.yaml", "utf8"));
 
             const beforeMaintainers = new Map(mainFile.map((maintainer) => [maintainer.name, {github: maintainer.github, repos: maintainer.repos || []}]));
-            let errorMessages;
+            let errorMessages = "";
 
             const owner = context.repo.owner;
             const repo = context.repo.repo;
