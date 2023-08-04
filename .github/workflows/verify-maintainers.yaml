@@ -50,7 +50,7 @@ jobs:
             // If the PR is made by the bot.
             if (author === 'asyncapi-bot') {
               console.log('Changes made by asyncapi-bot, skipping verification')
-              
+
               const removedMaintainers = mainFile.filter(
                 (mainMaintainer) => !prFile.some((maintainer) => mainMaintainer.github === maintainer.github)
               );
@@ -154,3 +154,6 @@ jobs:
 
 
   
+
+
+
