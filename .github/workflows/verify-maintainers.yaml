@@ -127,11 +127,11 @@ jobs:
               try {
                 const errorMessages = JSON.parse(escapedErrorMessages);
                 console.log('Parsed errorMessages:', errorMessages);
-                if (Array.isArray(errorMessages)) {
+                if (typeof errorMessages === 'string') {
                   const owner = context.repo.owner;
                   const repo = context.repo.repo;
                   const pull_number = context.issue.number;
-                  const commentBody = errorMessages.join('\n');
+                  const commentBody = errorMessages;
                   const commentContext = {
                     owner: owner,
                     repo: repo,
@@ -146,7 +146,7 @@ jobs:
                     state: 'closed'
                   });
                 } else {
-                  console.error('errorMessages is not an array.');
+                  console.error('errorMessages is not a string.');
                 }
               } catch (error) {
                 console.error('Error parsing errorMessages:', error);
@@ -154,8 +154,7 @@ jobs:
             } else {
               console.info('rawErrorMessages is empty.');
             }
-
-
+  
   bot-removal-notification:
     needs: verify-changes
     if:  needs.verify-changes.outputs.removedTscMembers !=  ''
