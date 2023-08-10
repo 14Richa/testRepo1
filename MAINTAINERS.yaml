@@ -43,8 +43,3 @@
   isTscMember: false
   repos:
     - dotnet-rabbitmq-template
-- name: sanju
-  github: github-bot-action
-  isTscMember: false
-  repos:
-    - testRepo
