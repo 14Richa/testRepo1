@@ -127,29 +127,34 @@ jobs:
               try {
                 const errorMessages = JSON.parse(escapedErrorMessages);
                 console.log('Parsed errorMessages:', errorMessages);
-                const owner = context.repo.owner;
-                const repo = context.repo.repo;
-                const pull_number = context.issue.number;
-                const commentBody = errorMessages.join('\n');
-                const commentContext = {
-                  owner: owner,
-                  repo: repo,
-                  issue_number: pull_number,
-                  body: commentBody
-                };
-                github.rest.issues.createComment(commentContext);
-                github.rest.pulls.update({
-                  owner: owner,
-                  repo: repo,
-                  pull_number: pull_number,
-                  state: 'closed'
-                });
+                if (Array.isArray(errorMessages)) {
+                  const owner = context.repo.owner;
+                  const repo = context.repo.repo;
+                  const pull_number = context.issue.number;
+                  const commentBody = errorMessages.join('\n');
+                  const commentContext = {
+                    owner: owner,
+                    repo: repo,
+                    issue_number: pull_number,
+                    body: commentBody
+                  };
+                  github.rest.issues.createComment(commentContext);
+                  github.rest.pulls.update({
+                    owner: owner,
+                    repo: repo,
+                    pull_number: pull_number,
+                    state: 'closed'
+                  });
+                } else {
+                  console.error('errorMessages is not an array.');
+                }
               } catch (error) {
                 console.error('Error parsing errorMessages:', error);
               }
             } else {
               console.info('rawErrorMessages is empty.');
             }
+
 
   bot-removal-notification:
     needs: verify-changes
