@@ -47,4 +47,4 @@
   github: github-bot-action
   isTscMember: false
   repos:
-    - dotnet-rabbitmq-template
+    - testRepo
