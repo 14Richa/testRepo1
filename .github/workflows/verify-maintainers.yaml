@@ -122,15 +122,21 @@ jobs:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
             const rawErrorMessages = `${{ needs.verify-changes.outputs.errorMessages }}`;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const pull_number = context.issue.number;
-
-            const errorMessages = JSON.parse(rawErrorMessages); 
-
-            const commentBody = errorMessages.join('\n');
-            github.rest.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
-            github.rest.pulls.update({ owner, repo, pull_number, state: 'closed' });
+            if (rawErrorMessages) {
+              try {
+                const errorMessages = JSON.parse(rawErrorMessages);
+                const owner = context.repo.owner;
+                const repo = context.repo.repo;
+                const pull_number = context.issue.number;
+                const commentBody = errorMessages.join('\n');
+                github.rest.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
+                github.rest.pulls.update({ owner, repo, pull_number, state: 'closed' });
+              } catch (error) {
+                core.info('Error parsing errorMessages:', error);
+              }
+            } else {
+              core.info('rawErrorMessages is empty.');
+            }
 
   bot-removal-notification:
     needs: verify-changes
