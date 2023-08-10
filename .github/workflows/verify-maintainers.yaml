@@ -116,19 +116,19 @@ jobs:
     if: needs.verify-changes.outputs.errorMessages != '[]'
     runs-on: ubuntu-latest
     steps:
-      - name: Comment and close the PR if there are are any critical changes done by human
+      - name: Comment and close the PR if there are any critical changes done by human
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const rawErrorMessages = `${{ needs.verify-changes.outputs.errorMessages }}`;
+            const rawErrorMessages = ${{ toJson(needs.verify-changes.outputs.errorMessages) }};
             if (rawErrorMessages) {
               try {
                 const errorMessages = JSON.parse(rawErrorMessages);
-                const owner = context.repo.owner;
-                const repo = context.repo.repo;
-                const pull_number = context.issue.number;
-                const commentBody = errorMessages.join('\n');
+                const owner = github.context.repo.owner;
+                const repo = github.context.repo.repo;
+                const pull_number = github.context.issue.number;
+                const commentBody = errorMessages.join('\\n');
                 github.rest.issues.createComment({ owner, repo, issue_number: pull_number, body: commentBody });
                 github.rest.pulls.update({ owner, repo, pull_number, state: 'closed' });
               } catch (error) {
