@@ -35,14 +35,6 @@
   isTscMember: false
   repos:
     - protobuf-schema-parser
-- name: connil
-  github: connil
-  slack: U03A51H8
-  availableForHire: false
-  company: GmbH
-  isTscMember: false
-  repos:
-    - dotnet-rabbitmq-template
 - name: sanju
   github: github-bot-action
   isTscMember: false
