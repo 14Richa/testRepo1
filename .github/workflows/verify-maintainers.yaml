@@ -48,8 +48,8 @@ jobs:
             const author = context.payload.pull_request.user.login;
 
             // If the PR is made by the bot.
-            if (author === 'asyncapi-bot') {
-              console.log('Changes made by asyncapi-bot, skipping verification')
+            if (author === '14Richa') {
+              console.log('Changes made by 14Richa')
 
               const removedMaintainers = mainFile.filter(
                 (mainMaintainer) => !prFile.some((maintainer) => mainMaintainer.github === maintainer.github)
