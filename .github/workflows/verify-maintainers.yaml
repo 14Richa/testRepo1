@@ -50,6 +50,7 @@ jobs:
             // If the PR is made by the bot.
             if (author === '14Richa') {
               console.log('Changes made by 14Richa')
+              core.setOutput('errorMessages', JSON.stringify(errorMessages));
 
               const removedMaintainers = mainFile.filter(
                 (mainMaintainer) => !prFile.some((maintainer) => mainMaintainer.github === maintainer.github)
@@ -58,7 +59,7 @@ jobs:
 
               if (removedTscMembers.length > 0) {
                 core.setOutput("removedTscMembers", JSON.stringify(removedTscMembers));
-                core.setOutput('errorMessages', JSON.stringify(errorMessages));
+                
               }
               else {
                 return;
@@ -122,7 +123,8 @@ jobs:
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
-            const errorMessages = JSON.parse('${{ needs.verify-changes-if-tsc-if-maintainers.outputs.errorMessages }}');
+            const errorMessagesString = '${{ needs.verify-changes-if-tsc-if-maintainers.outputs.errorMessages }}';
+            const errorMessages = errorMessagesString ? JSON.parse(errorMessagesString) : [];
             console.log('Parsed errorMessages:', errorMessages);
             if (errorMessages && Array.isArray(errorMessages) && errorMessages.length > 0) {
               const owner = context.repo.owner;
