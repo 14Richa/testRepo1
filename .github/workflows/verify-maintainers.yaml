@@ -58,6 +58,7 @@ jobs:
 
               if (removedTscMembers.length > 0) {
                 core.setOutput("removedTscMembers", JSON.stringify(removedTscMembers));
+                core.setOutput('errorMessages', JSON.stringify(errorMessages));
               }
               else {
                 return;
