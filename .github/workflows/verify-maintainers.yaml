@@ -50,7 +50,7 @@ jobs:
             // If the PR is made by the bot.
             if (author === 'asyncapi-bot') {
               console.log('Changes made by asyncapi-bot')
-              core.setOutput('errorMessages', JSON.stringify(errorMessages));
+              core.setOutput('errorMessages', JSON.stringify(errorMessages).replace(/"/g, '\\"'));
 
               const removedMaintainers = mainFile.filter(
                 (mainMaintainer) => !prFile.some((maintainer) => mainMaintainer.github === maintainer.github)
@@ -107,7 +107,7 @@ jobs:
             console.log('Error messages:', errorMessages);
             // Set the error messages as an output
             console.log('Setting error messages output...');
-            core.setOutput('errorMessages', JSON.stringify(errorMessages));
+            core.setOutput('errorMessages', JSON.stringify(errorMessages).replace(/"/g, '\\"'));
 
     outputs: 
       errorMessages: ${{ steps.verify-changes.outputs.errorMessages }}
@@ -124,7 +124,8 @@ jobs:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
             const errorMessagesString = '${{ needs.verify-changes.outputs.errorMessages }}';
-            const errorMessages = errorMessagesString ? JSON.parse(errorMessagesString) : [];
+            const errorMessages = errorMessagesString ? JSON.parse(errorMessagesString.replace(/\\"/g, '"'));
+
             console.log('Parsed errorMessages:', errorMessages);
             if (errorMessages && Array.isArray(errorMessages) && errorMessages.length > 0) {
               const owner = context.repo.owner;
