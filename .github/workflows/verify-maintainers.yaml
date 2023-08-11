@@ -48,8 +48,8 @@ jobs:
             const author = context.payload.pull_request.user.login;
 
             // If the PR is made by the bot.
-            if (author === '14Richa') {
-              console.log('Changes made by 14Richa')
+            if (author === 'asyncapi-bot') {
+              console.log('Changes made by asyncapi-bot')
               core.setOutput('errorMessages', JSON.stringify(errorMessages));
 
               const removedMaintainers = mainFile.filter(
