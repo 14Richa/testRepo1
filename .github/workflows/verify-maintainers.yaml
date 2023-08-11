@@ -124,6 +124,7 @@ jobs:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
             const errorMessagesString = '${{ needs.verify-changes.outputs.errorMessages }}';
+            console.log('Raw errorMessagesString:', errorMessagesString);
             const errorMessages = errorMessagesString ? JSON.parse(errorMessagesString.replace(/\\"/g, '"'));
 
             console.log('Parsed errorMessages:', errorMessages);
