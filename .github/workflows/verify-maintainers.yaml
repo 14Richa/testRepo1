@@ -113,7 +113,7 @@ jobs:
 
   handle-human-made-critical-changes:
     needs: verify-changes
-    if: needs.verify-changes.outputs.errorMessages != '[]'
+    if: needs.verify-changes-if-tsc-if-maintainers.outputs.errorMessages != '[]' && needs.verify-changes-if-tsc-if-maintainers.outputs.errorMessages != 'null'
     runs-on: ubuntu-latest
     steps:
       - name: Comment and close the PR if there are any critical changes done by human
