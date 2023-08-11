@@ -119,8 +119,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug errorMessages content
-        run: echo "${{ needs.verify-changes.outputs.errorMessages }}"
-
+        run: |
+          echo "${{ needs.verify-changes.outputs.errorMessages }}"
+          
       - name: Comment and close the PR if there are any critical changes done by human
         uses: actions/github-script@v6
         with:
