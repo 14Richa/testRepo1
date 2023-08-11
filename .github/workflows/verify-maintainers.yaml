@@ -113,7 +113,7 @@ jobs:
 
   handle-human-made-critical-changes:
     needs: verify-changes
-    if: needs.verify-changes.outputs.errorMessages != []
+    if: needs.verify-changes.outputs.errorMessages != '[]'
     runs-on: ubuntu-latest
     steps:
       - name: Comment and close the PR if there are any critical changes done by human
