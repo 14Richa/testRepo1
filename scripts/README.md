@@ -55,9 +55,9 @@ Overall, these subgraphs represent a comprehensive approach to maintaining and u
 
 ### Workflows
 
-### `verify-maintainers.yaml`
+### `maintainers-tsc-changes-verification.yaml`
 
-This workflow listens for changes to the Maintainers.yaml file and verifies the legitimacy of the changes. It discerns between changes made by a bot and those made by a human. If a human has made changes that involve critical attributes, which include modifying fields such as the GitHub username, repository keys, or removing an entire maintainer object, the workflow blocks the pull request and notifies the user with an appropriate message.
+This workflow listens for changes to the Maintainers.yaml file and verifies the legitimacy of the changes. It discerns between changes made by a bot and those made by a human. If a human has made changes that involve critical attributes, which include modifying fields such as the GitHub username, and repository keys, or removing an entire maintainer object, the workflow blocks the pull request and notifies the user with an appropriate message.
 
 The workflow allows the pull request to continue if:
 
@@ -89,7 +89,7 @@ end
 
 ### `update-maintainers.yaml`
 
-This workflow listens for changes to the CODEOWNERS file and updates the Maintainers.yaml file accordingly. It also picks up the GitHub username, Twitter handle, and the name of the maintained repository from the API and notifies the affected users. If bot accounts are removed or added in CODEOWNERS file then it should ignore this workflow.
+This workflow listens for changes to the CODEOWNERS file and updates the Maintainers.yaml file accordingly. It also picks up the GitHub username, Twitter handle, and the name of the maintained repository from the API and notifies the affected users. If bot accounts are removed or added to the CODEOWNERS file then it should ignore this workflow.
 
 > Note: This workflow should be located in every repository. It should be configured with permissions to update the Maintainers.yaml file in the community repository.
 
@@ -134,7 +134,7 @@ When the workflow is triggered, it first detects any changes in the maintainers'
 
 If new maintainers are added, the workflow proceeds to the Send invite to join org and team job, which sends invitations to the newly added maintainers to join the organization and the maintainers' team. After that, the workflow proceeds to the Send welcome message job, which sends a welcome message to the new maintainers, providing them with information about the organization and team.
 
-On the other hand, if maintainers are removed, the workflow proceeds to the remove the maintainer from org job, which removes the identified maintainers from the organization. Additionally, the workflow sends a goodbye message to the removed maintainers through the Send goodbye message job.
+On the other hand, if maintainers are removed, the workflow proceeds to remove the maintainer from the org job, which removes the identified maintainers from the organization. Additionally, the workflow sends a goodbye message to the removed maintainers through the Send goodbye message job.
 
 In case the maintainers' list is updated, indicating changes in TSC members, the workflow proceeds to the Update emeritus with the removed maintainer job. This job updates the Emeritus.yaml file to reflect the changes in TSC membership.
 
@@ -225,7 +225,7 @@ D1 --> |Maintainer's repositories list| S1[Merge PR];
 C1 --> |Addition| G1[Merge PR];
 C1 --> |Removal| E1{Maintainer being removed};
 
-G1 --> Z1[Send invitation to new maintainer and notify TSC Members Add new maintainer to organization, repository, and team Post welcome comment to pull request];
+G1 --> Z1[Send an invitation to the new maintainer and notify TSC Members Add new maintainer to organization, repository, and team Post welcome comment to pull request];
 
 E1 --> |Yes| F1[Human verification required before removal];
 
