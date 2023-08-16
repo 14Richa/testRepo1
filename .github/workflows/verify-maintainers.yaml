@@ -1,3 +1,4 @@
+
 name: Verify tsc and maintainers changes by human and bot
 
 on:
@@ -168,9 +169,3 @@ jobs:
                   body: 'A TSC member has been removed in this PR. Maintainers of this repository need to review and approve this PR.'
               }
               github.issues.createComment(issueComment);
-
-
-  
-
-
-
