@@ -110,6 +110,19 @@ jobs:
             console.log('Setting error messages output...');
             core.setOutput('errorMessages', JSON.stringify(errorMessages));
 
+      - name: Check if there are changes
+        run: |
+          if ! git diff --quiet; then
+            echo "CHANGES=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit."
+            echo "CHANGES=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Print for testing
+        if: steps.check_changes.outputs.CHANGES == 'true'
+        run: |
+          echo "hi from here"
+
     outputs: 
       errorMessages: ${{ steps.verify-changes.outputs.errorMessages }}
       removedTscMembers: ${{ steps.verify-changes.outputs.removedTscMembers }}
