@@ -111,6 +111,7 @@ jobs:
             core.setOutput('errorMessages', JSON.stringify(errorMessages));
 
       - name: Check if there are changes
+        id: check_changes
         run: |
           if ! git diff --quiet; then
             echo "CHANGES=true" >> $GITHUB_OUTPUT
