@@ -18,3 +18,38 @@ Before we get into the details of what I achieved, let's start with a visual ove
 This issue contains easy-to-understand diagrams that show how our project is set up and how various tasks are automated. It's like a map that helps us understand how different parts of our project work together.
 
 Now, let's move on to the specific things I accomplished and contributed to during Google Summer of Code 2023 with the AsyncAPI Initiative.
+
+##### Successful Contributions
+
+Before we get into the specific workflows I created, let me share how I started. I converted the TSC_MEMBERS.json file to the MAINTAINERS.yaml file to improve our project's structure. I also added a new key, isTscMember, to make our project management more efficient. . You can review the details of this contribution in the merged PR here : https://github.com/asyncapi/community/pull/720
+
+Now, I'll provide insights into the workflows I developed, which have since been successfully integrated into our production environment. These workflows have greatly contributed to the efficiency and effectiveness of our project management:
+
+-  `maintainers-tsc-changes-verification.yaml`
+
+    This (workflow)[https://github.com/asyncapi/community/blob/master/.github/workflows/maintainers-tsc-changes-verification.yaml] listens for changes to the Maintainers.yaml file and ensures the validity of these changes. It differentiates between alterations made by bots and those made by humans. If a human modifies critical attributes or removes a maintainer object, the workflow blocks the pull request and notifies the user appropriately.
+
+        - If the changes are made by an approved bot account, the pull request proceeds.
+        - If human-made changes don't involve critical attributes, the pull request continues.
+
+    > Note: This workflow is now located exclusively in our community repository and is configured as a required status check in the repository settings to prevent merging if it fails.
+
+- `update-maintainers.yaml`
+
+    This (workflow)[https://github.com/asyncapi/.github/pull/248] actively monitors changes to the CODEOWNERS file and automatically updates the Maintainers.yaml file accordingly. It also retrieves essential information like GitHub usernames, Twitter handles, and repository names from the API, notifying affected users. It selectively ignores changes related to bot accounts in the CODEOWNERS file.
+    
+    > Note: This workflow has been implemented in every repository and is configured with permissions to update the Maintainers.yaml file in our community repository.
+
+- `tsc_management.yaml`
+
+    This (workflow)[https://github.com/asyncapi/community/blob/master/.github/workflows/tsc_management.yml] effectively manages changes to the tsc_members team and the Maintainers list within our project. It triggers when there is a change in the isTscMember property. In the event of an isTscMember property change, the workflow seamlessly adds or removes members from the TSC team based on the property's value. It also proactively notifies affected users when a member is added to the tsc_members team.
+
+- `maintainer_management.yaml`
+
+    This (workflow)[https://github.com/asyncapi/community/blob/master/.github/workflows/maintainer_management.yml] comes into action when a pull request is closed in the repository. It focuses on managing alterations within the MAINTAINERS.yaml file, including additions, removals, or updates to maintainers.
+        - When a pull request is merged, the workflow detects changes in the maintainers' list and takes appropriate actions.
+        - If new maintainers are added, it sends invitations to join the organization and team, followed by a warm welcome message.
+        - If maintainers are removed, it ensures their removal from the organization and conveys a gracious goodbye.
+        - In cases of updates to TSC members, it diligently updates the Emeritus.yaml file to reflect these changes.
+        
+    > Note: This workflow is now an integral part of our community repository.
