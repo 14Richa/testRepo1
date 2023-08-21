@@ -21,7 +21,7 @@ Now, let's move on to the specific things I accomplished and contributed to duri
 
 ##### Successful Contributions
 
-Before we get into the specific workflows I created, let me share how I started. I converted the TSC_MEMBERS.json file to the MAINTAINERS.yaml file to improve our project's structure. I also added a new key, isTscMember, to make our project management more efficient. You can review the details of this contribution in the merged PR [here](https://github.com/asyncapi/community/pull/720). 
+Before we get into the specific workflows I created, let me share how I started. I converted the TSC_MEMBERS.json file to the MAINTAINERS.yaml file to improve our project's structure. I also added a new key, isTscMember. You can review the details of this contribution in the merged PR [here](https://github.com/asyncapi/community/pull/720). 
 
 Furthermore, I've added an Emeritus file, which lists individuals who were previously TSC members but are no longer active. You can find the details of this contribution in this [PR](https://github.com/asyncapi/community/pull/806).
 
