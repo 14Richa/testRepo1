@@ -1,4 +1,4 @@
-#### Reflections on My GSoC 2023 Journey: Accomplishments, Challenges, and What's Ahead
+#### Reflections on My GSoC 2023 Journey: My Achievements with AsyncAPI Initiative
 
 
 In this blog post, I want to share what I did during Google Summer of Code 2023 with the amazing AsyncAPI Initiative.
