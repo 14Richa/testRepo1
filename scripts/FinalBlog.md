@@ -55,11 +55,13 @@ Now, I'll provide insights into the workflows I developed, which have since been
 
 As my Google Summer of Code 2023 journey with the AsyncAPI Initiative concludes, I find myself not just reflecting on the achievements and successes but also looking forward to the future. The journey has been a remarkable one, and I'm eager to continue contributing and making our workflows even more efficient.
 
+- *Adapting to Real-World Scenarios and Enhancing Efficiency*
+
+Testing is a critical aspect of workflow development. As we put our workflows into action, we may encounter new scenarios and test cases that we didn't initially anticipate. I will be working on fixes and adding more functionality based on testing and these real-world experiences.
+
 - *Continuous Improvement and Bug Resolution*
 
 The work we've done so far is just the beginning. Building automation workflows is an iterative process, and there's always room for improvement. I'm committed to continuously refining and enhancing the existing workflows. This involves closely monitoring their performance, identifying any bottlenecks or areas for optimization, and making the necessary adjustments to ensure they run seamlessly.
 
-- *Adapting to Real-World Scenarios and Enhancing Efficiency*
 
-Testing is a critical aspect of workflow development. As we put our workflows into action, we may encounter new scenarios and test cases that we didn't initially anticipate. I will be working on fixes and adding more functionality based on testing and these real-world experiences.
 
