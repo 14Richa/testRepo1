@@ -32,13 +32,11 @@ Now, I'll provide insights into the workflows I developed, which have since been
     - If the changes are made by an approved bot account, the pull request proceeds.
     - If human-made changes don't involve critical attributes, the pull request continues.
 
-    > Note: This workflow is now located exclusively in our community repository and is configured as a required status check in the repository settings to prevent merging if it fails.
 
 - `update-maintainers.yaml`
 
     This [workflow](https://github.com/asyncapi/.github/pull/248) actively monitors changes to the CODEOWNERS file and automatically updates the Maintainers.yaml file accordingly. It also retrieves essential information like GitHub usernames, Twitter handles, and repository names from the API, notifying affected users. It selectively ignores changes related to bot accounts in the CODEOWNERS file.
     
-    > Note: This workflow has been implemented in every repository and is configured with permissions to update the Maintainers.yaml file in our community repository.
 
 - `tsc_management.yaml`
 
@@ -52,7 +50,6 @@ Now, I'll provide insights into the workflows I developed, which have since been
     - If maintainers are removed, it ensures their removal from the organization and conveys a gracious goodbye.
     - In cases of updates to TSC members, it diligently updates the Emeritus.yaml file to reflect these changes.
         
-    > Note: This workflow is now an integral part of our community repository.
 
 ##### Looking Forward
 
