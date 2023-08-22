@@ -1,7 +1,6 @@
-#### Reflections on My GSoC 2023 Journey: My Achievements with AsyncAPI Initiative
+#### Reflections on My GSoC 2023 Journey: My Achievements and What's Next with the AsyncAPI Initiative
 
-
-In this blog post, I want to share what I did during Google Summer of Code 2023 with the amazing AsyncAPI Initiative.
+In this blog post, I want to share what I did during Google Summer of Code 2023 with AsyncAPI Initiative.
 
 During this program, I had the privilege of working with some amazing people who really helped me. I want to give a big shoutout to Lukasz Gornicki, KhudaDad Nomani, and Saurav Kumar for being great mentors. They guided me, supported me, and kept me motivated throughout the program.
 
@@ -9,7 +8,7 @@ Being a part of the AsyncAPI community has been a fantastic learning experience 
 
 #####  Project Overview: Automate paperwork around project governance
 
-The goal of my project was to automate the processes around project governance. This project aimed to automate the maintenance of the Maintainers.yaml file, which contained the list of maintainers and TSC members of AsyncAPI. The tasks involved implementing workflows to automatically update the member's list based on changes in other files, inviting new maintainers and TSC members, updating the Emeritus.yaml file when someone was removed, and aggregating helpful information in the Maintainers.yaml file. These automation and improvements made it easier to manage the maintainers and TSC members of AsyncAPI.
+The goal of my project was to automate the processes around project governance. This project aimed to automate the maintenance of the Maintainers.yaml file, which contained the list of maintainers and TSC members of AsyncAPI. The tasks involved implementing workflows to automatically update the member's list based on changes in other files, inviting new maintainers and TSC members, updating the Emeritus.yaml file when someone was removed, and aggregating helpful information in the Maintainers.yaml file. These automation and improvements made it easier to manage the maintainers and TSC members of AsyncAPI Initiative.
 
 ##### Project Layout and Workflows
 
@@ -25,7 +24,7 @@ Before we get into the specific workflows I created, let me share how I started.
 
 Furthermore, I've added an Emeritus file, which lists individuals who were previously TSC members but are no longer active. You can find the details of this contribution in this [PR](https://github.com/asyncapi/community/pull/806).
 
-Now, I'll provide insights into the workflows I developed, which have since been successfully integrated into our production environment. These workflows have greatly contributed to the efficiency and effectiveness of our project management:
+Now, I'll provide insights into the workflows I developed, which have since been successfully integrated into our production environment. These workflows have greatly contributed to the efficiency and effectiveness:
 
 -  `maintainers-tsc-changes-verification.yaml`
 
