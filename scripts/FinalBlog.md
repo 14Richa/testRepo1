@@ -53,7 +53,7 @@ Now, I'll provide insights into the workflows I developed during the program:
 
 ##### Looking Forward
 
-As my Google Summer of Code 2023 journey with the AsyncAPI Initiative concludes, I find myself not just reflecting on the achievements and successes but also looking forward to the future. The journey has been a remarkable one, and I'm eager to continue contributing and making our workflows even more efficient.
+As my Google Summer of Code 2023 journey with the AsyncAPI Initiative approaches its conclusion in a few weeks, I'm taking a moment to reflect on the achievements and successes, but also to look ahead. It has been an incredible journey, and I'm enthusiastic about continuing to contribute and making our workflows even better.
 
 - *Adapting to Real-World Scenarios and Enhancing Efficiency*
 
