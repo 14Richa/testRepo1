@@ -20,7 +20,7 @@ Now, let's move on to the specific things I accomplished and contributed to duri
 
 ##### Successful Contributions
 
-Before we get into the specific workflows I created, let me share how I started. I converted the TSC_MEMBERS.json file to the MAINTAINERS.yaml file to improve our project's structure. I also added a new key, isTscMember. You can review the details of this contribution [here](https://github.com/asyncapi/community/pull/720). 
+Before we get into the specific workflows I created, let me share how I started. I converted the TSC_MEMBERS.json file to the MAINTAINERS.yaml file to improve our project's structure. I also added a new key, `isTscMember`. You can review the details of this contribution [here](https://github.com/asyncapi/community/pull/720). 
 
 Furthermore, I've added an Emeritus file, which lists individuals who were previously TSC members but are no longer active. You can find the details of this contribution in this [PR](https://github.com/asyncapi/community/pull/806).
 
@@ -40,7 +40,7 @@ Now, I'll provide insights into the workflows I developed during the program:
 
 - `tsc_management.yaml`
 
-    This [workflow](https://github.com/asyncapi/community/blob/master/.github/workflows/tsc_management.yml) effectively manages changes to the tsc_members team and the Maintainers list within our project. It triggers when there is a change in the isTscMember property. In the event of an isTscMember property change, the workflow seamlessly adds or removes members from the TSC team based on the property's value. It also proactively notifies affected users when a member is added to the tsc_members team.
+    This [workflow](https://github.com/asyncapi/community/blob/master/.github/workflows/tsc_management.yml) effectively manages changes to the tsc_members team and the Maintainers list within our project. It triggers when there is a change in the `isTscMember` property. In the event of an `isTscMember` property change, the workflow seamlessly adds or removes members from the TSC team based on the property's value. It also proactively notifies affected users when a member is added to the tsc_members team.
 
 - `maintainer_management.yaml`
 
