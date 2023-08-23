@@ -8,7 +8,7 @@ Being a part of the AsyncAPI community has been a fantastic learning experience 
 
 #####  Project Overview: Automate paperwork around project governance
 
-The goal of my project was to automate the processes around project governance. This project aimed to automate the maintenance of the Maintainers.yaml file, which contained the list of maintainers and TSC members of AsyncAPI. The tasks involved implementing workflows to automatically update the member's list based on changes in other files, inviting new maintainers and TSC members, updating the Emeritus.yaml file when someone was removed, and aggregating helpful information in the Maintainers.yaml file. These automation and improvements made it easier to manage the maintainers and TSC members of AsyncAPI Initiative.
+The goal of my project was to automate the processes around project governance. This project aimed to automate the maintenance of the MAINTAINERS.yaml file, which contained the list of maintainers and TSC members of AsyncAPI. The tasks involved implementing workflows to automatically update the member's list based on changes in other files, inviting new maintainers and TSC members, updating the Emeritus.yaml file when someone was removed, and aggregating helpful information in the MAINTAINERS.yaml file. These automation and improvements made it easier to manage the maintainers and TSC members of AsyncAPI Initiative.
 
 ##### Project Layout and Workflows
 
@@ -24,18 +24,18 @@ Before we get into the specific workflows I created, let me share how I started.
 
 Furthermore, I've added an Emeritus file, which lists individuals who were previously TSC members but are no longer active. You can find the details of this contribution in this [PR](https://github.com/asyncapi/community/pull/806).
 
-Now, I'll provide insights into the workflows I developed, which have since been successfully integrated into our production environment. These workflows have greatly contributed to the efficiency and effectiveness:
+Now, I'll provide insights into the workflows I developed during the program: 
 
 -  `maintainers-tsc-changes-verification.yaml`
 
-    This [workflow](https://github.com/asyncapi/community/blob/master/.github/workflows/maintainers-tsc-changes-verification.yaml) listens for changes to the Maintainers.yaml file and ensures the validity of these changes. It differentiates between alterations made by bots and those made by humans. If a human modifies critical attributes or removes a maintainer object, the workflow blocks the pull request and notifies the user appropriately.
+    This [workflow](https://github.com/asyncapi/community/blob/master/.github/workflows/maintainers-tsc-changes-verification.yaml) listens for changes to the MAINTAINERS.yaml file and ensures the validity of these changes. It differentiates between alterations made by bots and those made by humans. If a human modifies critical attributes or removes a maintainer object, the workflow blocks the pull request and notifies the user appropriately.
     - If the changes are made by an approved bot account, the pull request proceeds.
     - If human-made changes don't involve critical attributes, the pull request continues.
 
 
 - `update-maintainers.yaml`
 
-    This [workflow](https://github.com/asyncapi/.github/pull/248) actively monitors changes to the CODEOWNERS file and automatically updates the Maintainers.yaml file accordingly. It also retrieves essential information like GitHub usernames, Twitter handles, and repository names from the API, notifying affected users. It selectively ignores changes related to bot accounts in the CODEOWNERS file.
+    This [workflow](https://github.com/asyncapi/.github/pull/248) actively monitors changes to the CODEOWNERS file and automatically updates the MAINTAINERS.yaml file accordingly. It also retrieves essential information like GitHub usernames, Twitter handles, and repository names from the API, notifying affected users. It selectively ignores changes related to bot accounts in the CODEOWNERS file.
     
 
 - `tsc_management.yaml`
