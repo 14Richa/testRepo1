@@ -47,7 +47,7 @@ Now, I'll provide insights into the workflows I developed during the program:
     This [workflow](https://github.com/asyncapi/community/blob/master/.github/workflows/maintainer_management.yml) comes into action when a pull request is closed in the repository. It focuses on managing alterations within the MAINTAINERS.yaml file, including additions, removals, or updates to maintainers.
     - When a pull request is merged, the workflow detects changes in the maintainers' list and takes appropriate actions.
     - If new maintainers are added, it sends invitations to join the organization and team, followed by a warm welcome message.
-    - If maintainers are removed, it ensures their removal from the organization and conveys a gracious goodbye.
+    - If maintainers are removed, it ensures their removal from the organization and conveys a goodbye message.
     - In cases of updates to TSC members, it diligently updates the Emeritus.yaml file to reflect these changes.
         
 
