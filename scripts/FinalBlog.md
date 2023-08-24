@@ -6,7 +6,7 @@ During this program, I had the privilege of working with some amazing people who
 
 Being a part of the AsyncAPI community has been a fantastic learning experience for me. I've gained so much knowledge, and working with this awesome group of people has been a truly memorable experience. In the upcoming sections of this blog post, I'll share the specific projects and achievements that made my Google Summer of Code 2023 journey so special.
 
-#####  Project Overview: Automate paperwork around project governance
+#####  Project Overview: [Automate paperwork around project governance](https://github.com/asyncapi/.github/issues/210)
 
 The goal of my project was to automate the processes around project governance. This project aimed to automate the maintenance of the MAINTAINERS.yaml file, which contained the list of maintainers and TSC members of AsyncAPI. The tasks involved implementing workflows to automatically update the member's list based on changes in other files, inviting new maintainers and TSC members, updating the Emeritus.yaml file when someone was removed, and aggregating helpful information in the MAINTAINERS.yaml file. These automation and improvements made it easier to manage the maintainers and TSC members of AsyncAPI Initiative.
 
@@ -29,7 +29,7 @@ Now, I'll provide insights into the workflows I developed during the program:
 -  `maintainers-tsc-changes-verification.yaml`
 
     This [workflow](https://github.com/asyncapi/community/blob/master/.github/workflows/maintainers-tsc-changes-verification.yaml) listens for changes to the MAINTAINERS.yaml file and ensures the validity of these changes. It differentiates between alterations made by bots and those made by humans. If a human modifies critical attributes or removes a maintainer object, the workflow blocks the pull request and notifies the user appropriately.
-    
+
     - If the changes are made by an approved bot account, the pull request proceeds.
     - If human-made changes don't involve critical attributes, the pull request continues.
 
