@@ -76,6 +76,7 @@ jobs:
             for (const username of addedUsernames) {
               const { data } = await github.rest.users.getByUsername({ username });
               const twitterUsername = data.twitter_username;
+              const name = data.name;
 
               // Exclude bot accounts
               if (username === 'asyncapi-bot' || username === 'asyncapi-bot-eve') {
@@ -86,6 +87,7 @@ jobs:
               const existingMaintainer = maintainers.find(maintainer => maintainer.github === username);
               if (!existingMaintainer) {
                 maintainers.push({
+                  name: name,
                   github: username,
                   twitter: twitterUsername,
                   isTscMember: false,
