@@ -1,0 +1,702 @@
+{
+	"info": {
+		"_postman_id": "15a719fe-5585-4d73-bb31-915022ecab03",
+		"name": "Echo Sample Requests",
+		"description": "kasndkasndn kjna skdjnsa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Query Param Variability",
+			"item": [
+				{
+					"name": "W/o Query Params",
+					"id": "d411a4a8-fbeb-4e90-95e9-c5a8310d9bc7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/get",
+						"description": "Should create a request w/o query params. In-case of an update, should NOT update request in-case the query params already exist.\n\nShould create an example with the headers and response body. In-case the 200 example already exists, it should NOT update the example in-case it has richer information already in the request / example."
+					},
+					"response": []
+				},
+				{
+					"name": "With Query Params",
+					"id": "b12a6322-8dd5-4bf5-962f-149b1e0121b0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/get?foo=bar&abc=xyzasdasd",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "foo",
+									"value": "bar"
+								},
+								{
+									"key": "abc",
+									"value": "xyzasdasd"
+								}
+							]
+						},
+						"description": "Should update the existing request with these query params (selected; assuming that the previous request was without any query params) given that the response was 2XX. The 200 example should be updated accordingly as well. This sets the notion that we are keeping the most enriched request available to the user to be sent with a successful response.\n\nIn-case the request didn't exist before, it should be created alongside with this example."
+					},
+					"response": []
+				},
+				{
+					"name": "With Same Fields but Different Values",
+					"id": "42eb3c73-e8ca-4eab-ae4c-9f5c266c120a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/get?foo=bar-modified&abc=xyz-modified",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "foo",
+									"value": "bar-modified"
+								},
+								{
+									"key": "abc",
+									"value": "xyz-modified"
+								}
+							]
+						},
+						"description": "No updates to existing request / response. In-case the request / response didn't exist, it should create it."
+					},
+					"response": []
+				},
+				{
+					"name": "With Same Fields but Different Value Types (not done yet)",
+					"id": "eecf2647-99ce-440f-94c6-1e24d8903b69",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/get?foo=1&abc=xyz-modified",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "foo",
+									"value": "1"
+								},
+								{
+									"key": "abc",
+									"value": "xyz-modified"
+								}
+							]
+						},
+						"description": "For the existing request, it should update the type assuming that it is a 200 response code. The example should be updated accordingly as well."
+					},
+					"response": []
+				},
+				{
+					"name": "With 1 New Param",
+					"id": "97990b65-02f5-4577-8f8d-daf403c30071",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/get?foo=bar&abc=xyz&def=function",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "foo",
+									"value": "bar"
+								},
+								{
+									"key": "abc",
+									"value": "xyz"
+								},
+								{
+									"key": "def",
+									"value": "function"
+								}
+							]
+						},
+						"description": "Should update the existing request with a new unselected query param.\n\nIn-case the new request contains all the query params that already existed, the new param could be selected."
+					},
+					"response": []
+				},
+				{
+					"name": "With All New Params",
+					"id": "bbdc6f66-5be2-4956-9d0f-8737d73534f8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/get?cat=arthur&dog=cooper",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "cat",
+									"value": "arthur"
+								},
+								{
+									"key": "dog",
+									"value": "cooper"
+								}
+							]
+						},
+						"description": "Should update the existing request / response fully since it a 2XX response."
+					},
+					"response": []
+				}
+			],
+			"id": "c0b2aada-1dbf-4fd1-b895-83b0b8478ae1"
+		},
+		{
+			"name": "Request Body Variability",
+			"item": [
+				{
+					"name": "Empty Body",
+					"id": "c9c104f2-30a2-4a30-bb99-d458d8e07766",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/post",
+						"description": "Should create a new request with the empty body and a corresponding response.\n\nIn-case the request already exists with more enriched data (say already a body), it should NOT update the request."
+					},
+					"response": []
+				},
+				{
+					"name": "With Request Body",
+					"id": "e949abd6-ae81-4adf-8729-2bfd75b112ed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": \n        {\n            \"petType\": \"dog\",\n            \"sampleInteger\": 100,\n            \"sampleObject\": {\n                \"internalKey\": {\n                    \"key2\": {\n                        \"amazing\": \"values\"\n                    },\n                    \"wonderful\": \"wow\"\n                },\n                \"abc\": \"true\"\n            },\n            \"sampleArray\": [\n                1,\n                2,\n                3,\n                4,\n                5\n            ],\n            \"sampleObjectArray\": [\n                {\n                    \"date\": \"2023-03-03\",\n                    \"today\": {\n                        \"value\": \"Wednesday\"\n                    }\n                }\n            ],\n            \"emptyArray\": [],\n            \"null\": null,\n            \"truncatedTypeObject\": {\n                \"type\": \"string\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/post",
+						"description": "Should update the existing request with the body in this request, if it is more enriched than the existing one and has a 2XX response code.\n\nShould craete a request in-case this is the first time we are observing this request, alongside the saved example."
+					},
+					"response": []
+				},
+				{
+					"name": "With One New Field in Request Body",
+					"id": "aa106a00-5ebe-43ab-b768-155e652cf513",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"petType\": \"dog\",\n    \"petName\": \"archie\",\n    \"petLocation\": \"SF\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/post",
+						"description": "Should update the request in-case there is more than 70% difference in the keys in the body and the response was 200."
+					},
+					"response": []
+				},
+				{
+					"name": "With Same Fields but Different Values",
+					"id": "ec33bc6a-af9e-4ef5-8557-2a576219acb2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"petType\": \"cat\",\n    \"petName\": \"arthur\",\n    \"petLocation\": \"Atlanta\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/post",
+						"description": "Should NOT update exising request / response. In-case the request didn't exist, it should create it."
+					},
+					"response": []
+				},
+				{
+					"name": "With All New Fields",
+					"id": "5a30afa4-1417-4e62-ac5c-9dcd2778fe80",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"carType\": \"hatchback\",\n    \"carName\": \"Hyundai Elantra GT\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/post",
+						"description": "In-case the fields change is more than 80% and the response code is 200, it should update the request."
+					},
+					"response": []
+				}
+			],
+			"id": "acdaa946-9ae1-4ced-873e-eca7d022e6de"
+		},
+		{
+			"name": "Header Variability",
+			"item": [
+				{
+					"name": "With Custom Headers",
+					"id": "7c868bf1-9b6b-47f8-a893-53f1f798e1aa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "foo1",
+								"value": "bar1",
+								"type": "text"
+							},
+							{
+								"key": "foo2",
+								"value": "bar2",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/headers"
+					},
+					"response": []
+				},
+				{
+					"name": "With Same Field but Different Value",
+					"id": "4eecde70-5775-4a85-ad6c-b5505adcbbaa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "foo1",
+								"value": "lorem1",
+								"type": "text"
+							},
+							{
+								"key": "foo2",
+								"value": "lorem2",
+								"type": "text"
+							},
+							{
+								"key": "aws-key",
+								"value": "AKIAWJT6SBGGI6EYO2N6",
+								"type": "text"
+							},
+							{
+								"key": "check-foo",
+								"value": "lorem3",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/headers"
+					},
+					"response": []
+				},
+				{
+					"name": "With 1 New Header",
+					"id": "d53f0dba-e677-4fa0-bcad-1ea5f49bf4b8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "foo1",
+								"value": "bar1",
+								"type": "text"
+							},
+							{
+								"key": "foo3",
+								"value": "bar3",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/headers"
+					},
+					"response": []
+				},
+				{
+					"name": "With all new Headers",
+					"id": "cdb4649d-10ab-4ef8-b99a-668db031af75",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "foo4",
+								"value": "bar4",
+								"type": "text"
+							},
+							{
+								"key": "foo5",
+								"value": "bar5",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/headers"
+					},
+					"response": []
+				}
+			],
+			"id": "207adf21-d275-42cf-be39-532cec329259"
+		},
+		{
+			"name": "Auth Variability",
+			"item": [
+				{
+					"name": "With Basic Auth",
+					"id": "3b03d747-0bd9-40b0-a20f-e2c04cca07fe",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "passisevengrteater",
+								"username": "userisgreat"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "abc",
+								"value": "BasicdXNlcjpwYXNz",
+								"type": "text"
+							},
+							{
+								"key": "test",
+								"value": "test",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/get",
+						"description": "Should create a request with the corresponding Auth type."
+					},
+					"response": []
+				},
+				{
+					"name": "With API Key",
+					"id": "db92453d-5f01-4c4a-a6f0-f46face3bc8b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": {
+								"value": "pmat-22222222222222222222222222",
+								"key": "test"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "ok",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+								"type": "text"
+							},
+							{
+								"key": "alpha",
+								"value": "Basic dXNlcjpwYXNz",
+								"type": "text"
+							},
+							{
+								"key": "beta",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+								"type": "text"
+							},
+							{
+								"key": "gamma",
+								"value": "Basic dXNlcm5hbWU6cGFzcw==",
+								"type": "text"
+							},
+							{
+								"key": "wowow",
+								"value": "PMAK-641aa45f8460300031d00c2a-d12c26f3d50d632437fa4854fc894c9eea",
+								"type": "text"
+							},
+							{
+								"key": "key1",
+								"value": "pmak-641aa45f8460300031d00c2a-d12c26f3d50d632437fa4854fc894c9eea",
+								"type": "text"
+							},
+							{
+								"key": "key2",
+								"value": "PMAT-641aa45f8460300031d00c2a13242",
+								"type": "text"
+							},
+							{
+								"key": "key3",
+								"value": "pMaT-641aa45f8460300031d00c2a13242",
+								"type": "text"
+							},
+							{
+								"key": "key4",
+								"value": "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/get",
+						"description": "If the request exists, should add the new header in an unselected state."
+					},
+					"response": []
+				}
+			],
+			"id": "a19679c8-6249-41c1-bd52-fb6eff65df22"
+		},
+		{
+			"name": "Path Variables",
+			"item": [
+				{
+					"name": "Sample Path Variable 1",
+					"id": "eb6becf1-21f7-41d1-898f-c2db91961c80",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/status/200",
+						"description": "Should create a request with path variable i.e. /status/:code and an example with 200 response code.\n\nIn-case the request already exists, no update to the request.\n\nIn-case the response already exists, no update to the response."
+					},
+					"response": []
+				},
+				{
+					"name": "Sample Path Variable 2",
+					"id": "598d141a-0c6d-412f-9102-84808bfb617c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/status/400",
+						"description": "Should NOT update the request as the response code is 400. Should create an example with 400 response code if it didn't exist before."
+					},
+					"response": []
+				}
+			],
+			"id": "2838ed6e-411a-49be-8271-27f23391cf80"
+		},
+		{
+			"name": "Non 2XX Response Codes",
+			"item": [
+				{
+					"name": "200",
+					"id": "76a9490b-cd46-4e7c-82b9-d0201675a2fc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/status/200",
+						"description": "Should create a request with path variable i.e. /status/:code and an example with 200 response code.\n\nIn-case the request already exists, no update to the request.\n\nIn-case the response already exists, no update to the response."
+					},
+					"response": []
+				},
+				{
+					"name": "400",
+					"id": "6f3d3da2-81ea-4c84-8d89-64de68958566",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/status/400?foo=bar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"status",
+								"400"
+							],
+							"query": [
+								{
+									"key": "foo",
+									"value": "bar"
+								}
+							]
+						},
+						"description": "Should create a new example witih 400 response code. In-case the request exists with any details such as query params, headers, the request should NOT be updated."
+					},
+					"response": []
+				}
+			],
+			"id": "117cfe0b-4f37-4f8d-addf-d5c784536c44"
+		},
+		{
+			"name": "Python",
+			"item": [
+				{
+					"name": "External Call via Requests",
+					"id": "e455b014-f568-4d78-8b35-6ee2121e4409",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/external"
+					},
+					"response": []
+				},
+				{
+					"name": "Query with slash at end",
+					"id": "65bd9496-e026-4d3b-a2a0-200bcfb0b4a8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/get/?cat=arthur&dog=cooper",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"get",
+								""
+							],
+							"query": [
+								{
+									"key": "cat",
+									"value": "arthur"
+								},
+								{
+									"key": "dog",
+									"value": "cooper"
+								}
+							]
+						},
+						"description": "Should update the existing request / response fully since it a 2XX response."
+					},
+					"response": []
+				}
+			],
+			"id": "290c8c12-7a37-45b1-b9b6-e0a03ecafeee"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "e5be142d-e40f-4e60-93ad-ccc47f00a2ec"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "c2455ef7-3b7f-4968-851c-fa454ccbcfb6"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "127.0.0.1:1337",
+			"type": "string"
+		}
+	]
+}
